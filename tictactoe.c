@@ -60,11 +60,12 @@ void print(void);
 void instructions(void);
 void clear(void);
 void setTile(char filler, char row, char column);
-bool checkInput(char *input);
+int checkInput(char *input);
 bool hasWon(char user);
 int won(void);
 int tie(void);
 void help(void);
+void restart(void);
 
 char board[3][3];
 
@@ -280,10 +281,14 @@ void setTile(char filler, char row, char column)
 	fields[1][index] = "1";
 }
 
-bool checkInput(char *input)
+int checkInput(char *input)
 {
+	
+	bool valid = false;
+	
 	if (strcmp(input, "QUIT") == 0)
 	{
+		valid = true;
 		clear();
 		printf(off);
 		exit(2);
@@ -294,7 +299,12 @@ bool checkInput(char *input)
 		help();
 	}
 
-	bool valid = false;
+	if (strcmp(input, "RESTART") == 0)
+	{
+		valid = true;
+		restart();
+	}
+
 	for (int i = 0; i < 9; i++)
 	{
 		if (strcmp(input, fields[0][i]) == 0)
@@ -429,4 +439,13 @@ void help(void)
 
 
 	printf(bgRed "\"quit\" to exit program\n\n" off);
+}
+
+
+void restart(void)
+{
+	winner = '\0';
+	done = false;
+	initialize();
+	clear();
 }
