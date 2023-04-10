@@ -1,6 +1,19 @@
-# tic-tac-toe
+# ConsoleGameLib
 
-My minimalist version of tic-tac-toe.
+A collection of minimalist games, singleplayer and multiplayer, to be played in the Console.
+
+---
+
+## Games
+
+- tictactoe
+
+## WIP Games
+
+## Planned games
+
+- Battleships
+- Hangman
 
 ---
 
@@ -20,33 +33,17 @@ wget https://github.com/TheBlackbird14/tic-tac-toe/releases/download/{version}/t
 
 ```bash
 
-unzip tictactoe.{version}.zip
+unzip cgl.{version}.zip
 
 ```
 
 ### Compile
 
-Using make:
+Requires make to be installed
 
 ```bash
 
-make tictactoe
-
-```
-
-Using clang:
-
-```bash
-
-clang -o tictactoe tictactoe.c strcap.c cs50.c 
-
-```
-
-Using gcc:
-
-```bash
-
-gcc -o tictactoe tictactoe.c strcap.c cs50.c 
+make cgl
 
 ```
 
@@ -54,6 +51,6 @@ gcc -o tictactoe tictactoe.c strcap.c cs50.c
 
 ```bash
 
-./tictactoe
+./cgl
 
 ```

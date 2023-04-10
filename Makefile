@@ -1,2 +1,3 @@
-tictactoe: main.c strcap.c cs50.c 
-	cc -o tictactoe main.c strcap.c cs50.c 
+cgl: main.c libs/strcap.c games/tictactoe.c libs/strcap.c libs/cs50.c
+	cc -o games/tictactoe games/tictactoe.c libs/strcap.c libs/cs50.c
+	cc -o cgl main.c libs/strcap.c
