@@ -15,8 +15,8 @@ void list(void);
 
 bool done;
 
-int totalGames = 3;
-char *games[2][3] = {{"TICTACTOE", "BATTLESHIPS", "HANGMAN"}, {"1", "2", "3"}};
+int totalGames = 1;
+char *games[2][1] = {{"TICTACTOE"}, {"1"}};
 
 int main(void)
 {
@@ -31,8 +31,8 @@ int main(void)
         do
         {
             char inputCache[50];
-            printf("GameLib> ");
-            scanf("%s", &inputCache);
+            printf("ConsoleGamesLib> ");
+            scanf("%s", inputCache);
             strcpy(input, strup(inputCache));
             //printf("Input: %s\n", input);
             //printf("Check: %d\n", checkInput(input));

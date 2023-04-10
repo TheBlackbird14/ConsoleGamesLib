@@ -12,33 +12,17 @@ Download latest version from [releases](https://github.com/TheBlackbird14/tic-ta
 
 ```bash
 
-unzip tictactoe.{version}.zip
+unzip cgl.{version}.zip
 
 ```
 
 ### Compile
 
-Using make:
+Requires make to be installed
 
 ```bash
 
-make tictactoe
-
-```
-
-Using clang:
-
-```bash
-
-clang -o tictactoe tictactoe.c strcap.c cs50.c 
-
-```
-
-Using gcc:
-
-```bash
-
-gcc -o tictactoe tictactoe.c strcap.c cs50.c 
+make cgl
 
 ```
 
@@ -46,6 +30,6 @@ gcc -o tictactoe tictactoe.c strcap.c cs50.c
 
 ```bash
 
-./tictactoe
+./cgl
 
 ```
