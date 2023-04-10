@@ -1,4 +1,4 @@
-# ConsoleGameLib
+# ConsoleGamesLib
 
 A collection of minimalist games, singleplayer and multiplayer, to be played in the Console.
 
@@ -19,13 +19,13 @@ A collection of minimalist games, singleplayer and multiplayer, to be played in 
 
 ## Install
 
-Download latest version from [releases](https://github.com/TheBlackbird14/tic-tac-toe/releases/tag/V1.0).
+Download latest version from [releases](https://github.com/TheBlackbird14/ConsoleGamesLib/releases).
 
 or:
 
 ```bash
 
-wget https://github.com/TheBlackbird14/tic-tac-toe/releases/download/{version}/tictactoe.{version}.zip
+wget https://github.com/TheBlackbird14/tic-tac-toe/releases/download/{version}/ConsoleGamesLib.{version}.zip
 
 ```
 
@@ -33,7 +33,7 @@ wget https://github.com/TheBlackbird14/tic-tac-toe/releases/download/{version}/t
 
 ```bash
 
-unzip cgl.{version}.zip
+unzip ConsoleGamesLib.{version}.zip
 
 ```
 
