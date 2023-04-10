@@ -53,6 +53,7 @@
 //extras
 #define warning "\033[37;41m"
 #define title "\033[1;32;44m"
+#define caution "\033[31;43m"
 
 
 void initialize(void);
@@ -65,39 +66,59 @@ bool hasWon(char user);
 int won(void);
 int tie(void);
 void help(void);
-void restart(void);
+void clearBoard(void);
 
 char board[3][3];
 
 
 bool done;
+bool reset;
 char winner;
+int turns = 0;
 
 //const char *inputs[] = {"TL","TC","TR","ML","MC","MR","BL","BC","BR"};
 char *fields[2][9] = {{"TL","TC","TR","ML","MC","MR","BL","BC","BR"}, {"0", "0", "0", "0", "0", "0", "0", "0", "0"}};
 
 int main(void)
 {
+	reset = false;
 	clear();
 	initialize();
 	instructions();
 
-	char user;
-	user = 'X';
+	char user = 'X';
+	char startingUser = 'X';
 	string input;
 
 	while(!done)
 	{
+		//debug
+ 		printf("Turns: %d\n", turns);
+		printf("StartingUser: %c\n", startingUser);
+		printf("User: %c\n", user);
+
+
+		if (turns == 0)
+		{
+			user = startingUser;
+		}
+
 		print();
 
 		if(user == 'X')
 		{
+			turns++;
 			do
 			{
 				input = strup(get_string(green"X" off " Turn> "purple));
 			}
 			while(checkInput(input) != 0);
 			printf(off);
+			if (reset == true)
+			{
+				clearBoard();
+				continue;
+			}
 
 			setTile('X', input[0], input[1]);
 			user = 'O';
@@ -105,12 +126,18 @@ int main(void)
 		}
 		else
 		{
+			turns++;
 			do
 			{
 				input = strup(get_string(green"O" off " Turn> "purple));
 			}
 			while(checkInput(input) != 0);
 			printf(off);
+			if (reset == true)
+			{
+				clearBoard();
+				continue;
+			}
 
 			setTile('O', input[0], input[1]);
 			user = 'X';
@@ -130,10 +157,7 @@ int main(void)
 
 			if (toupper(repeat) == 'Y')
 			{
-				winner = '\0';
-				done = false;
-				initialize();
-				clear();
+				clearBoard();
 				continue;
 			}
 			else
@@ -146,13 +170,11 @@ int main(void)
 		{
 			done = true;
 			winner = 'X';
+			startingUser = 'O';
 
 			if (won() == 0)
 			{
-				winner = '\0';
-				done = false;
-				initialize();
-				clear();
+				clearBoard();
 				continue;
 			}
 			else
@@ -165,13 +187,11 @@ int main(void)
 		{
 			done = true;
 			winner = 'O';
+			startingUser = 'X';
 
 			if (won() == 0)
 			{
-				winner = '\0';
-				done = false;
-				initialize();
-				clear();
+				clearBoard();
 				continue;
 			}
 			else
@@ -302,7 +322,7 @@ int checkInput(char *input)
 	if (strcmp(input, "RESTART") == 0)
 	{
 		valid = true;
-		restart();
+		reset = true;
 	}
 
 	for (int i = 0; i < 9; i++)
@@ -439,13 +459,16 @@ void help(void)
 
 
 	printf(bgRed "\"quit\" to exit program\n\n" off);
+	printf(caution "\"restart\" to restart the game\n\n" off);
 }
 
 
-void restart(void)
+void clearBoard(void)
 {
 	winner = '\0';
 	done = false;
+	reset = false;
+	turns = 0;
 	initialize();
 	clear();
 }

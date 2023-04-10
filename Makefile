@@ -1,2 +1,2 @@
-tictactoe: tictactoe.c strcap.c cs50.c 
-	cc -o tictactoe tictactoe.c strcap.c cs50.c 
+tictactoe: main.c strcap.c cs50.c 
+	cc -o tictactoe main.c strcap.c cs50.c 
