@@ -8,6 +8,14 @@ My minimalist version of tic-tac-toe.
 
 Download latest version from [releases](https://github.com/TheBlackbird14/tic-tac-toe/releases/tag/V1.0).
 
+or:
+
+```bash
+
+wget https://github.com/TheBlackbird14/tic-tac-toe/releases/download/{version}/tictactoe.{version}.zip
+
+```
+
 ### Unzip
 
 ```bash
