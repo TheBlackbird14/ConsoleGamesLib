@@ -92,12 +92,6 @@ int main(void)
 
 	while(!done)
 	{
-		//debug
- 		printf("Turns: %d\n", turns);
-		printf("StartingUser: %c\n", startingUser);
-		printf("User: %c\n", user);
-
-
 		if (turns == 0)
 		{
 			user = startingUser;
