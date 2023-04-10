@@ -18,6 +18,14 @@ unzip tictactoe.{version}.zip
 
 ### Compile
 
+Using make:
+
+```bash
+
+make tictactoe
+
+```
+
 Using clang:
 
 ```bash
