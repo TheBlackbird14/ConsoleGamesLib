@@ -34,6 +34,8 @@ wget https://github.com/TheBlackbird14/tic-tac-toe/releases/download/{version}/C
 ```bash
 
 unzip ConsoleGamesLib.{version}.zip
+rm ConsoleGamesLib.{version}.zip
+cd ConsoleGamesLib
 
 ```
 
