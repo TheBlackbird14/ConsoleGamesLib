@@ -1,6 +1,19 @@
-# tic-tac-toe
+# ConsoleGameLib
 
-My minimalist version of tic-tac-toe.
+A collection of minimalist games, singleplayer and multiplayer, to be played in the Console.
+
+---
+
+## Games
+
+- tictactoe
+
+## WIP Games
+
+## Planned games
+
+- Battleships
+- Hangman
 
 ---
 
