@@ -5,6 +5,7 @@
 
 #include "./libs/strcap.h"
 #include "./libs/colors.h"
+#include "./libs/cs50.h"
 
 int checkInput(char *input);
 void quit(void);
@@ -24,19 +25,13 @@ int main(void)
 
     instructions();
 
-    char input[50];
+    string input;
 
     while(!done)
     {
         do
         {
-            char inputCache[50];
-            printf("ConsoleGamesLib> ");
-            scanf("%s", inputCache);
-            strcpy(input, strup(inputCache));
-            //printf("Input: %s\n", input);
-            //printf("Check: %d\n", checkInput(input));
-
+            input = strup(get_string("ConsoleGamesLib> "));
         }
         while ((checkInput(input) - 1)  < 0);
 
@@ -121,14 +116,21 @@ void clear(void)
 
 void instructions(void)
 {
-    printf("Here are the instructions\n");
-    //TODO
+    printf("%sWelcome to %sConsoleGamesLib%s!\n", red, bgWhite, off);
+    printf("%s---------------------------------------%s\n\n", green, off);
+    printf("%sConsoleGamesLib%s is a collection of small games that you can play in the command line.\n", yellow, off);
+    printf("To see a list of all available games, type %slist%s.\n", cyan, off);
+    printf("To start a game, type its number or full name and hit enter.\n");
+    printf("For example, to start the game of Tic Tac Toe, type %s1%s or %stic_tac_toe%s.\n\n", cyan, off, cyan, off);
+    printf("To see a list of all available commands, type %shelp%s.\n", purple, off);
+    printf("Enjoy your gaming experience with %sConsoleGamesLib%s!\n", blue, off);
+
 }
 
 void help(void)
 {
-    printf("some help here ur welcome\n");
-    //TODO
+    printf("\n%s- \"quit\" to exit CGL%s\n", warning, off);
+    printf("%s- \"list\" to list all available games%s\n\n", caution, off);
 }
 
 void list(void)
