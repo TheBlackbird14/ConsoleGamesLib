@@ -25,7 +25,7 @@ or:
 
 ```bash
 
-wget https://github.com/TheBlackbird14/tic-tac-toe/releases/download/{version}/ConsoleGamesLib.{version}.zip
+wget https://github.com/TheBlackbird14/ConsoleGamesLib/releases/download/{version}/ConsoleGamesLib.{version}.zip
 
 ```
 
