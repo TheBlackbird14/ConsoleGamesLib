@@ -10,9 +10,10 @@ A collection of minimalist games, singleplayer and multiplayer, to be played in 
 
 ## WIP Games
 
+- Battleships
+
 ## Planned games
 
-- Battleships
 - Hangman
 
 ---
