@@ -22,8 +22,9 @@ void waitfor(char input);
 void quit(void);
 
 void print(char you[10][10], char enemy[10][10]);
-int checkInput(string input);
+int checkInput(int user, string input);
 int checkPlacement(int user, int shipnr, string coords, char dir);
+int shoot(int user, int row, int col);
 
 char boardp1[10][10]; 
 /* = {
@@ -98,6 +99,7 @@ int main(void)
         if (turns == 0)
         {
             place();
+            clear();
             printf("Press ENTER to start as player one");
         }
         else
@@ -118,17 +120,27 @@ int main(void)
             {
                 input1 = strup(get_string("Player 1> "));
             } 
-            while (checkInput(input1) != 0);
+            while (checkInput(1, input1) != 0);
 
+            //if hit
+            if (shoot(1, input1[0], input1[1]) != 0)
+            {
+                shoot(1, input1[0], input1[1]);
+                clear();
+                print(boardp1, boardp2);
+                printf("HIT! Your turn again\n");
+                waitfor('\n');
+            }
+            else if (shoot(1, input1[0], input1[1]) == 0)
+            {
+                printf("Miss!\n");
+                turnp2 = 1;
+                turnp1 = 0;
+                printf("ENTER to end turn");
+                waitfor('\n');
 
-            //check if was hit
-            printf("%s\n", input1);
+            }
 
-            //if miss
-            turnp1 = 0;
-            turnp2 = 1;
-            printf("ENTER to end turn");
-            waitfor('\n');
         }
 
         clear();
@@ -144,14 +156,26 @@ int main(void)
             {
                 input2 = strup(get_string("Player 2> "));
             } 
-            while (checkInput(input2) != 0);
+            while (checkInput(2, input2) != 0);
 
+            //if hit
+            if (shoot(2, input2[0], input2[1]) != 0)
+            {
+                shoot(2, input2[0], input2[1]);
+                clear();
+                print(boardp2, boardp1);
+                printf("HIT! Your turn again\n");
+                waitfor('\n');
+            }
+            else if (shoot(2, input2[0], input2[1]) == 0)
+            {
+                
+                turnp2 = 0;
+                turnp1 = 1;
+                printf("ENTER to end turn");
+                waitfor('\n');
+            }
 
-            printf("%s\n", input2);
-
-            turnp2 = 0;
-            printf("ENTER to end turn");
-            waitfor('\n');
         }
 
     }
@@ -278,10 +302,15 @@ void instructions(void)
     printf("//instructions\n");
 }
 
-int checkInput(string input)
+int checkInput(int user, string input)
 {
     int validnum = 0;
     int validletter = 0;
+
+    int alreadyShot = 0;
+    int row = input[0] - 65;
+    int col = input[1] - 48;
+
     if (strcmp(input, "QUIT") == 0)
     {
         quit();
@@ -307,7 +336,22 @@ int checkInput(string input)
         
     }
 
-    if (validletter == 1 && validnum == 1)
+    if (user == 1)
+    {
+        if (boardp1[row][col] == 'O' || boardp1[row][col] == 'H')
+        {
+            alreadyShot = 1;
+        }
+    }
+    if (user == 2)
+    {
+        if (boardp2[row][col] == 'O' || boardp2[row][col] == 'H')
+        {
+            alreadyShot = 1;
+        }
+    }
+
+    if (validletter == 1 && validnum == 1 && alreadyShot == 0)
     {
         return 0;
     }
@@ -352,7 +396,7 @@ void place(void)
         {
             rowcol = strup(get_string("Starting Point of Ship %d with length %d> ", i + 1, shipsp1[i].size));
 
-            if (checkInput(rowcol) != 0)
+            if (checkInput(1, rowcol) != 0)
             {
                 continue;
             }
@@ -408,7 +452,7 @@ void place(void)
         {
             rowcol = strup(get_string("Starting Point of Ship %d with length %d> ", i + 1, shipsp2[i].size));
 
-            if (checkInput(rowcol) != 0)
+            if (checkInput(2, rowcol) != 0)
             {
                 continue;
             }
@@ -769,4 +813,39 @@ void printPlacement(char user[10][10])
 	printf("-\n");
     }
     printf("\n\n");
+}
+
+int shoot(int user, int row, int col)
+{
+    int hit = 0;
+    if (user == 1)
+    {
+        switch (boardp2[row][col])
+        {
+            case ' ':
+            boardp2[row][col] = 'O';
+            break;
+
+            case 'X':
+            boardp2[row][col] = 'H';
+            hit = 1;
+            break;
+        }
+    }
+    else
+    {
+        switch (boardp1[row][col])
+        {
+            case ' ':
+            boardp1[row][col] = 'O';
+            break;
+
+            case 'X':
+            boardp1[row][col] = 'H';
+            hit = 1;
+            break;
+        }
+    }
+
+    return hit;
 }
