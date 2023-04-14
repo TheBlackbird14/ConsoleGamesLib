@@ -16,8 +16,9 @@ void list(void);
 
 bool done;
 
-int totalGames = 1;
-char *games[2][1] = {{"TICTACTOE"}, {"1"}};
+#define totalGames 2
+
+char *games[2][2] = {{"TICTACTOE", "BATTLESHIPS"}, {"1", "2"}};
 
 int main(void)
 {
