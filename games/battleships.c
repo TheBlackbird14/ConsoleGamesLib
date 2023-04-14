@@ -26,7 +26,7 @@ int checkInput(int user, string input);
 int checkPlacement(int user, int shipnr, string coords, char dir);
 int shoot(int user, int row, int col);
 
-char boardp1[10][10]; 
+char boardp1[10][10] 
 /* = {
 {'X', 'O', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {'X', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -38,10 +38,10 @@ char boardp1[10][10];
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'X'},
-};
- */
-char boardp2[10][10];
-/*  = {
+} */;
+
+char boardp2[10][10]
+ /* = {
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', ' ', 'X', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', 'O', 'X', 'O', ' ', ' '},
@@ -52,7 +52,7 @@ char boardp2[10][10];
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-}; */
+} */;
 
 
 char tablenames[2][10] = {{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}, {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'}};
@@ -125,7 +125,6 @@ int main(void)
             //if hit
             if (shoot(1, input1[0], input1[1]) != 0)
             {
-                shoot(1, input1[0], input1[1]);
                 clear();
                 print(boardp1, boardp2);
                 printf("HIT! Your turn again\n");
@@ -161,7 +160,6 @@ int main(void)
             //if hit
             if (shoot(2, input2[0], input2[1]) != 0)
             {
-                shoot(2, input2[0], input2[1]);
                 clear();
                 print(boardp2, boardp1);
                 printf("HIT! Your turn again\n");
@@ -817,6 +815,9 @@ void printPlacement(char user[10][10])
 
 int shoot(int user, int row, int col)
 {
+    row -= 65;
+    col -= 48;
+
     int hit = 0;
     if (user == 1)
     {
