@@ -21,7 +21,7 @@ void quit(void);
 
 void print(char you[10][10], char enemy[10][10]);
 int checkInput(string input);
-int checkPlacement(string coords, char dir);
+int checkPlacement(int user, int shipnr, string coords, char dir);
 
 char boardp1[10][10]; 
 /* = {
@@ -52,7 +52,7 @@ char boardp2[10][10];
 }; */
 
 
-char tablenames[2][10] = {{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'}, {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}};
+char tablenames[2][10] = {{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}, {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'}};
 int done = 0;
 int turnp1;
 int turnp2;
@@ -267,7 +267,7 @@ int checkInput(string input)
     
     for (int i = 0; i < 10; i++)
     {
-        if (input[0] == tablenames[0][i])
+        if (input[0] == tablenames[1][i])
         {
             validletter = 1;
             break;
@@ -277,7 +277,7 @@ int checkInput(string input)
     
     for (int i = 0; i < 10; i++)
     {
-        if (input[1] == tablenames[1][i])
+        if (input[1] == tablenames[0][i])
         {
             validnum = 1;
             break;
@@ -342,7 +342,7 @@ void place(void)
                 continue;
             }
         }
-        while (checkPlacement(rowcol, dir) != 0);
+        while (checkPlacement(1, i, rowcol, dir) != 0);
         
         
         shipsp1[i].row = (rowcol[0] - 65);
@@ -358,7 +358,181 @@ void place(void)
 
 }
 
-int checkPlacement(string coords, char dir)
+int checkPlacement(int user, int shipnr, string coords, char dir)
 {
-    //TODO
+    int valid = 0;
+    int empty = 1;
+    int row = coords[0] - 65;
+    int col = coords[1] - 48;
+    int length = shipsp1[shipnr].size - 1;
+    
+    printf("Startcords: [%d][%d]\n", row, col);
+    printf("Travellength: %d\n", length);
+    printf("Endcoords if up: [%d][%d]\n", row - length, col);
+
+
+    switch (dir)
+    {
+        case 'U':
+            if ((row - length) >= 0)
+            {
+                valid = 1;
+            }
+            break;
+        case 'D':
+            if ((row + length) <= 9)
+            {
+                valid = 1;
+            }
+            break;
+        case 'L':
+            if ((col - length) >= 0)
+            {
+                valid = 1;
+            }
+            break;
+        case 'R':
+            if ((col + length) <= 9)
+            {
+                valid = 1;
+            }
+            break;
+    }
+
+    if (valid == 0)
+    {
+        return 1;
+    }
+    
+    if (user == 1)
+    {
+        switch (dir)
+        {
+            case 'U':
+
+                for (int i = row; i < length; i--)
+                {
+                    if (boardp1[i][col] == 'X')
+                    {
+                        empty = 0;
+                        break;
+                    }
+                }
+                
+                break;
+
+            case 'D':
+
+                for (int i = row; i < length; i++)
+                {
+                    if (boardp1[i][col] == 'X')
+                    {
+                        empty = 0;
+                        break;
+                    }
+                }
+
+                break;
+
+            case 'L':
+
+                for (int i = col; i < length; i--)
+                {
+                    if (boardp1[row][i] == 'X')
+                    {
+                        empty = 0;
+                        break;
+                    }
+                }
+
+                break;
+
+            case 'R':
+
+                for (int i = col; i < length; i++)
+                {
+                    if (boardp1[row][i] == 'X')
+                    {
+                        empty = 0;
+                        break;
+                    }
+                }
+
+                break;
+
+        }
+    }
+
+    if (user == 2)
+    {
+        switch (dir)
+        {
+            case 'U':
+
+                for (int i = row; i < length; i--)
+                {
+                    if (boardp2[i][col] == 'X')
+                    {
+                        empty = 0;
+                        break;
+                    }
+                }
+                
+                break;
+
+            case 'D':
+
+                for (int i = row; i < length; i++)
+                {
+                    if (boardp2[i][col] == 'X')
+                    {
+                        empty = 0;
+                        break;
+                    }
+                }
+
+                break;
+
+            case 'L':
+
+                for (int i = col; i < length; i--)
+                {
+                    if (boardp2[row][i] == 'X')
+                    {
+                        empty = 0;
+                        break;
+                    }
+                }
+
+                break;
+
+            case 'R':
+
+                for (int i = col; i < length; i++)
+                {
+                    if (boardp2[row][i] == 'X')
+                    {
+                        empty = 0;
+                        break;
+                    }
+                }
+
+                break;
+
+        }
+    }
+
+    
+    printf("Valid: %d\n", valid);
+    printf("Empty: %d\n", empty);
+
+
+    if (empty == 1 && valid == 1)
+    {
+	return 0;
+    }
+    else
+    {
+        return 1;
+    }
 }
