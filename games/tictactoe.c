@@ -60,9 +60,9 @@ int main(void)
 			do
 			{
 				input = strup(get_string(green"X" off " Turn> "purple));
+				printf(off);
 			}
 			while(checkInput(input) != 0);
-			printf(off);
 			if (reset == true)
 			{
 				clearBoard();
@@ -79,9 +79,9 @@ int main(void)
 			do
 			{
 				input = strup(get_string(green"O" off " Turn> "purple));
+				printf(off);
 			}
 			while(checkInput(input) != 0);
-			printf(off);
 			if (reset == true)
 			{
 				clearBoard();
@@ -99,10 +99,10 @@ int main(void)
 
 			do
 			{
-				repeat = get_char(uBlack "Play another Round(y/n)> " bgRed);
+				repeat = get_char(uGreen "Play another Round(y/n)> " bgRed);
+				printf(off);
 			}
 			while(toupper(repeat) != 'Y' && toupper(repeat) != 'N');
-			printf(off);
 
 			if (toupper(repeat) == 'Y')
 			{
@@ -353,10 +353,10 @@ int won(void)
 
 	do
 	{
-		repeat = get_char(uBlack "Play another Round(y/n)> " bgRed);
+		repeat = get_char(uGreen "Play another Round(y/n)> " bgRed);
+		printf(off);
 	}
 	while(toupper(repeat) != 'Y' && toupper(repeat) != 'N');
-	printf(off);
 
 	if (toupper(repeat) == 'Y')
 	{
