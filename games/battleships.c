@@ -585,7 +585,7 @@ int checkPlacement(int user, int shipnr, string coords, char dir)
 
             case 'R':
 
-                for (int i = 0, j = col; i < length; i++, j--)
+                for (int i = 0, j = col; i < length; i++, j++)
                 {
                     if (boardp1[row][j] == 'X')
                     {
@@ -644,7 +644,7 @@ int checkPlacement(int user, int shipnr, string coords, char dir)
 
             case 'R':
 
-                for (int i = 0, j = col; i < length; i++, j--)
+                for (int i = 0, j = col; i < length; i++, j++)
                 {
                     if (boardp2[row][j] == 'X')
                     {
@@ -665,7 +665,7 @@ int checkPlacement(int user, int shipnr, string coords, char dir)
 
     if (empty == 1 && valid == 1)
     {
-	return 0;
+	    return 0;
     }
     else
     {
@@ -751,7 +751,7 @@ void placeOnBoard(int user, int row, int col, char dir, int length)
 
             case 'R':
             
-            for (int i = 0, j = row; i < length; i++, j++)
+            for (int i = 0, j = col; i < length; i++, j++)
             {
                 boardp2[row][j] = 'X';
             }
@@ -808,7 +808,7 @@ void printPlacement(char user[10][10])
 	    {
 	        printf("----");
 	    }
-	printf("-\n");
+	    printf("-\n");
     }
     printf("\n\n");
 }
