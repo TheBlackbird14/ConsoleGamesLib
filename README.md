@@ -7,14 +7,13 @@ A collection of minimalist games, singleplayer and multiplayer, to be played in 
 ## Games
 
 - tictactoe
+- battleships
 
 ## WIP Games
 
-- Battleships
+- Hangman
 
 ## Planned games
-
-- Hangman
 
 ---
 
@@ -24,7 +23,7 @@ Download latest version from [releases](https://github.com/TheBlackbird14/Consol
 
 or:
 
-```bash
+```
 
 wget https://github.com/TheBlackbird14/ConsoleGamesLib/releases/download/{version}/ConsoleGamesLib.{version}.zip
 
@@ -32,7 +31,7 @@ wget https://github.com/TheBlackbird14/ConsoleGamesLib/releases/download/{versio
 
 ### Unzip
 
-```bash
+```
 
 unzip ConsoleGamesLib.{version}.zip
 rm ConsoleGamesLib.{version}.zip
@@ -44,7 +43,7 @@ cd ConsoleGamesLib
 
 Requires make to be installed
 
-```bash
+```
 
 make cgl
 
@@ -52,7 +51,7 @@ make cgl
 
 ### Execute
 
-```bash
+```
 
 ./cgl
 
