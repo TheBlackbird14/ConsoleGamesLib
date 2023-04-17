@@ -18,7 +18,7 @@ bool done;
 
 #define totalGames 2
 
-char *games[2][2] = {{"TICTACTOE", "BATTLESHIPS"}, {"1", "2"}};
+char *games[2][totalGames] = {{"TICTACTOE", "BATTLESHIPS"}, {"1", "2"}};
 
 int main(void)
 {
@@ -50,7 +50,9 @@ int main(void)
 
         system(command);
 
-        printf("Welcome back\n");
+        clear();
+
+        printf(red"Welcome back\n"off);
 
     }
 
@@ -122,7 +124,7 @@ void instructions(void)
     printf("%sConsoleGamesLib%s is a collection of small games that you can play in the command line.\n", yellow, off);
     printf("To see a list of all available games, type %slist%s.\n", cyan, off);
     printf("To start a game, type its number or full name and hit enter.\n");
-    printf("For example, to start the game of Tic Tac Toe, type %s1%s or %stic_tac_toe%s.\n\n", cyan, off, cyan, off);
+    printf("For example, to start the game of Tic Tac Toe, type %s1%s or %stictactoe%s.\n\n", cyan, off, cyan, off);
     printf("To see a list of all available commands, type %shelp%s.\n", purple, off);
     printf("Enjoy your gaming experience with %sConsoleGamesLib%s!\n", blue, off);
 
