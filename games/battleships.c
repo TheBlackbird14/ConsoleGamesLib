@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 
 #include "../libs/strcap.h"
@@ -25,6 +26,7 @@ void print(char you[10][10], char enemy[10][10]);
 int checkInput(int user, string input);
 int checkPlacement(int user, int shipnr, string coords, char dir);
 int shoot(int user, int row, int col);
+int checkWinner(void);
 
 char boardp1[10][10] 
 /* = {
@@ -94,7 +96,7 @@ int main(void)
     initialize();
     instructions();
 
-    while (!done) 
+    while (!done)
     {
         if (turns == 0)
         {
@@ -132,6 +134,8 @@ int main(void)
             }
             else if (shoot(1, input1[0], input1[1]) == 0)
             {
+                clear();
+                print(boardp1, boardp2);
                 printf("Miss!\n");
                 turnp2 = 1;
                 turnp1 = 0;
@@ -140,6 +144,12 @@ int main(void)
 
             }
 
+        }
+
+        if (checkWinner)
+        {
+            done = 1;
+            break;
         }
 
         clear();
@@ -167,7 +177,8 @@ int main(void)
             }
             else if (shoot(2, input2[0], input2[1]) == 0)
             {
-                
+                clear();
+                print(boardp2, boardp1);
                 turnp2 = 0;
                 turnp1 = 1;
                 printf("ENTER to end turn");
@@ -176,7 +187,30 @@ int main(void)
 
         }
 
+        if (checkWinner)
+        {
+            done = 1;
+            break;
+        }
+
     }
+
+    switch (checkWinner())
+    {
+        case 1:
+        //1 has won
+        break;
+
+        case 2:
+        //2 has won
+        break;
+    
+        default:
+        break;
+    }
+
+    //play another round? 
+
 }
 
 void clear(void)
@@ -297,7 +331,14 @@ void waitfor(char input)
 
 void instructions(void)
 {
-    printf("//instructions\n");
+    printf("%sWelcome to %sBattleships!%s\n", red, bgWhite, off);
+    printf("In this game you shoot at eachothers ships and try to sink all your enemies ships first.\n");
+    printf("But first, you have to %splace%s your ships at the beginning of the game.\n", cyan, off);
+    printf("To do so, enter the %scoordinate%s at which the ships should start, and then the %sdirection%s it should point to (%su%sp, %sd%sown, %sl%seft, %sr%sight)\n", yellow, off, yellow, off, uWhite, off, uWhite, off, uWhite, off, uWhite, off);
+    printf("%sPlayer 1%s starts. have fun!\n\n", green, off);
+    printf("Press %sENTER%s to start", bRed, off);
+    
+    waitfor('\n');
 }
 
 int checkInput(int user, string input)
@@ -585,7 +626,7 @@ int checkPlacement(int user, int shipnr, string coords, char dir)
 
             case 'R':
 
-                for (int i = 0, j = col; i < length; i++, j--)
+                for (int i = 0, j = col; i < length; i++, j++)
                 {
                     if (boardp1[row][j] == 'X')
                     {
@@ -644,7 +685,7 @@ int checkPlacement(int user, int shipnr, string coords, char dir)
 
             case 'R':
 
-                for (int i = 0, j = col; i < length; i++, j--)
+                for (int i = 0, j = col; i < length; i++, j++)
                 {
                     if (boardp2[row][j] == 'X')
                     {
@@ -751,7 +792,7 @@ void placeOnBoard(int user, int row, int col, char dir, int length)
 
             case 'R':
             
-            for (int i = 0, j = row; i < length; i++, j++)
+            for (int i = 0, j = col; i < length; i++, j++)
             {
                 boardp2[row][j] = 'X';
             }
@@ -771,10 +812,10 @@ void printPlacement(char user[10][10])
         printf(" | %c", tablenames[0][i]);
     }
     printf(" |\n  ");
-        for (int i = 0; i < 10; i++)
-        {
-            printf("----");
-        }
+    for (int i = 0; i < 10; i++)
+    {
+        printf("----");
+    }
     printf("-\n");
     
     for (int i = 0; i < 10; i++)
@@ -849,4 +890,56 @@ int shoot(int user, int row, int col)
     }
 
     return hit;
+}
+
+int checkWinner(void)
+{
+    int winner = 0;
+    //check board p1
+    bool shipsleftp1 = false;
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            if (boardp1[i][j] == 'X')
+            {
+                shipsleftp1 = true;               
+                break;
+            }
+        }
+        if (shipsleftp1 == true)
+        {
+            break;
+        }
+    }
+
+    if (shipsleftp1 == false)
+    {
+        winner = 2;
+    }
+
+    //check board p1
+    bool shipsleftp2 = false;
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            if (boardp2[i][j] == 'X')
+            {
+                shipsleftp2 = true;               
+                break;
+            }
+        }
+        if (shipsleftp2 == true)
+        {
+            break;
+        }
+    }
+
+    if (shipsleftp2 == false)
+    {
+        winner = 1;
+    }
+
+    return winner;
 }
