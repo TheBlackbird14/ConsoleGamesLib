@@ -31,7 +31,7 @@ int checkWinner(void);
 void printWinner(void);
 
 char boardp1[10][10] 
-= {
+/* = {
 {'X', 'O', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {'X', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {'H', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -42,10 +42,10 @@ char boardp1[10][10]
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'X'},
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'X'},
-};
+} */;
 
 char boardp2[10][10]
-= {
+/* = {
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', ' ', 'X', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', 'O', 'X', 'O', ' ', ' '},
@@ -56,7 +56,7 @@ char boardp2[10][10]
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-};
+} */;
 
 
 char tablenames[2][10] = {{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}, {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'}};
@@ -95,14 +95,14 @@ struct shipp2 shipsp2[MAX_SHIPS];
 int main(void)
 {
     clear();
-    //initialize();
+    initialize();
     instructions();
 
     while (!done)
     {
         if (turns == 0)
         {
-            //place();
+            place();
             clear();
             printf("Press ENTER to start as player one");
         }
@@ -146,14 +146,15 @@ int main(void)
 
             }
             
-            if (&checkWinner) // if has won break turn
+            if (checkWinner()) // if has won break turn
             {
+                printf("%d\n", checkWinner());
                 break;
             }
 
         }
 
-        if (&checkWinner)
+        if (checkWinner())
         {
             done = 1;
             switch (checkWinner())
@@ -230,14 +231,14 @@ int main(void)
                 waitfor('\n');
             }
             
-            if (&checkWinner) // if has won break turn
+            if (checkWinner()) // if has won break turn
             {
                 break;
             }
 
         }
 
-        if (&checkWinner)
+        if (checkWinner())
         {
             done = 1;
             switch (checkWinner())
