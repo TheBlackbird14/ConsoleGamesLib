@@ -26,10 +26,12 @@ void print(char you[10][10], char enemy[10][10]);
 int checkInput(int user, string input);
 int checkPlacement(int user, int shipnr, string coords, char dir);
 int shoot(int user, int row, int col);
+
 int checkWinner(void);
+void printWinner(void);
 
 char boardp1[10][10] 
-/* = {
+= {
 {'X', 'O', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {'X', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {'H', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -38,12 +40,12 @@ char boardp1[10][10]
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', ' ', 'O', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'X'},
-} */;
+{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'X'},
+};
 
 char boardp2[10][10]
- /* = {
+= {
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', ' ', 'X', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', 'O', 'X', 'O', ' ', ' '},
@@ -54,7 +56,7 @@ char boardp2[10][10]
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-} */;
+};
 
 
 char tablenames[2][10] = {{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}, {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'}};
@@ -93,14 +95,14 @@ struct shipp2 shipsp2[MAX_SHIPS];
 int main(void)
 {
     clear();
-    initialize();
+    //initialize();
     instructions();
 
     while (!done)
     {
         if (turns == 0)
         {
-            place();
+            //place();
             clear();
             printf("Press ENTER to start as player one");
         }
@@ -143,13 +145,56 @@ int main(void)
                 waitfor('\n');
 
             }
+            
+            if (&checkWinner) // if has won break turn
+            {
+                break;
+            }
 
         }
 
-        if (checkWinner)
+        if (&checkWinner)
         {
             done = 1;
-            break;
+            switch (checkWinner())
+            {
+                case 1:
+                clear();
+                printf("%sPlayer 1 has Won!\n%s", caution, off);
+                printWinner();
+                break;
+
+                case 2:
+                printf("%sPlayer 2 has Won!\n%s", caution, off);
+                break;
+            
+                default:
+                break;
+            }
+
+            char repeat;
+
+            do
+            {
+                repeat = get_char(uPurple "Play another Round(y/n)> " bgRed);
+            }
+            while(toupper(repeat) != 'Y' && toupper(repeat) != 'N');
+            printf(off);
+
+            if (toupper(repeat) == 'Y')
+            {
+                //clear and continue
+                clear();
+                initialize();
+                turns = 0;
+                done = 0;
+                continue;
+            }
+            else 
+            {
+                clear();
+                quit();
+            }
         }
 
         clear();
@@ -184,32 +229,60 @@ int main(void)
                 printf("ENTER to end turn");
                 waitfor('\n');
             }
+            
+            if (&checkWinner) // if has won break turn
+            {
+                break;
+            }
 
         }
 
-        if (checkWinner)
+        if (&checkWinner)
         {
             done = 1;
-            break;
+            switch (checkWinner())
+            {
+                case 1:
+                clear();
+                printf("%sPlayer 1 has Won!\n%s", caution, off);
+                printWinner();
+                break;
+
+                case 2:
+                printf("%sPlayer 2 has Won!\n%s", caution, off);
+                break;
+            
+                default:
+                break;
+            }
+
+            char repeat;
+
+            do
+            {
+                repeat = get_char(uPurple "Play another Round(y/n)> " bgRed);
+            }
+            while(toupper(repeat) != 'Y' && toupper(repeat) != 'N');
+            printf(off);
+
+            if (toupper(repeat) == 'Y')
+            {
+                //clear and continue
+                clear();
+                initialize();
+                turns = 0;
+                done = 0;
+                continue;
+            }
+            else 
+            {
+                clear();
+                quit();
+            }
         }
 
     }
 
-    switch (checkWinner())
-    {
-        case 1:
-        //1 has won
-        break;
-
-        case 2:
-        //2 has won
-        break;
-    
-        default:
-        break;
-    }
-
-    //play another round? 
 
 }
 
@@ -942,4 +1015,103 @@ int checkWinner(void)
     }
 
     return winner;
+}
+
+void printWinner(void)
+{
+    //print player 1 sea
+    printf("Player 1: \n\n ");
+    for (int i = 0; i < 10; i++)
+    {
+        printf(" | %c", tablenames[0][i]);
+    }
+    printf(" |\n  ");
+    for (int i = 0; i < 10; i++)
+    {
+        printf("----");
+    }
+    printf("-\n");
+    
+    for (int i = 0; i < 10; i++)
+    {
+        printf("%c", tablenames[1][i]);
+        for (int j = 0; j < 10; j++)
+        {
+            //normsal sea (nothing)
+            if (boardp1[i][j] == ' ')
+            {
+                printf(" | %s %s", bgBlue, off);
+            }
+            //ship placed on tile
+            if (boardp1[i][j] == 'X')
+            {
+                printf(" | %s %s", bgWhite, off);
+            }
+            //shot fires but missed
+            if (boardp1[i][j] == 'O')
+            {
+                printf(" | %sO%s", missed, off);
+            }
+            //shot fired and hit ship
+            if (boardp1[i][j] == 'H')
+            {
+                printf(" | %sX%s", hitship, off);
+            }
+        }
+        printf(" |\n  ");
+        for (int i = 0; i < 10; i++)
+	    {
+	        printf("----");
+	    }
+	printf("-\n");
+    }
+    printf("\n\n");
+
+    //print player 2 sea
+    printf("Player 2: \n\n ");
+    for (int i = 0; i < 10; i++)
+    {
+        printf(" | %c", tablenames[0][i]);
+    }
+    printf(" |\n  ");
+    for (int i = 0; i < 10; i++)
+    {
+        printf("----");
+    }
+    printf("-\n");
+    
+    for (int i = 0; i < 10; i++)
+    {
+        printf("%c", tablenames[1][i]);
+        for (int j = 0; j < 10; j++)
+        {
+            //normsal sea (nothing)
+            if (boardp2[i][j] == ' ')
+            {
+                printf(" | %s %s", bgBlue, off);
+            }
+            //ship placed on tile
+            if (boardp2[i][j] == 'X')
+            {
+                printf(" | %s %s", bgWhite, off);
+            }
+            //shot fires but missed
+            if (boardp2[i][j] == 'O')
+            {
+                printf(" | %sO%s", missed, off);
+            }
+            //shot fired and hit ship
+            if (boardp2[i][j] == 'H')
+            {
+                printf(" | %sX%s", hitship, off);
+            }
+        }
+        printf(" |\n  ");
+        for (int i = 0; i < 10; i++)
+	    {
+	        printf("----");
+	    }
+	printf("-\n");
+    }
+    printf("\n\n");
 }
