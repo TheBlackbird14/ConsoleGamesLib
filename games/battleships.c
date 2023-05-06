@@ -67,8 +67,22 @@ int main(void)
 
 
 //print the board during the game
-void print(char you[10][10], char enemy[10][10], int mode ) // mode 0 = place; 1 = in game; 2 = display winner
+void print(player p, int mode ) // mode 0 = place; 1 = in game; 2 = display winner
 {
+    if (p == p1)
+    {
+        char you[10][10] = p1.sea;
+        char enemy[10][10] = p2.sea;
+    }
+    else if (p == p2)
+    {
+        char you[10][10] = p2.sea;
+        char enemy[10][10] = p1.sea
+    }
+    else 
+    {
+        printf("invalid use of function print\n");
+    }
 
     //print own sea
     printf("Your Sea: \n\n ");
@@ -193,10 +207,14 @@ void print(char you[10][10], char enemy[10][10], int mode ) // mode 0 = place; 1
 
 void place(void)
 {
+    clear();
+    printf("ENTER to Place Ships for Player 1");
+    waitfor('\n');
+
     for (int i = 0; i < MAX_SHIPS; i++)
     {
         clear();
-        print(p1.sea, p2.sea, 0);
+        print(p1, 0);
 
         char input[3];
         int c;
@@ -218,19 +236,36 @@ void place(void)
         //waitfor('\n');
 
         char dir;
+        int c = 0;
+
         do
         {
             printf("Direction (u, d, l, r)> ");
             scanf("%c", dir);
-        }
-        while (strup(dir) != 'u' || strup(dir) != 'd' || strup(dir) != 'l' ||strup(dir) != 'r');
 
+            while ((c = getchar()) != '\n' && c != EOF);  // clear input buffer
+
+            if (toupper(dir) == 'Q')
+            {
+                quit();
+            }
+        }
+        while (toupper(dir) != 'U' && toupper(dir) != 'D' && toupper(dir) != 'L' && toupper(dir) != 'R');
+
+        int row = toupper(input[0]) - 65;
+        int col = input[1] - 48;
+
+        placeOnBoard(p1, row, col, dir, shipsLengths[i]);
 
     }
 
+    clear();
+    printf("ENTER to Place Ships for Player 2");
+    waitfor('\n');
+
 }
 
-void placeOnBoard(int user, int row, int col, char dir, int length)
+void placeOnBoard(player user, int row, int col, char dir, int length)
 {
 
 }
