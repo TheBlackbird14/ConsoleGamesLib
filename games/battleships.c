@@ -26,20 +26,21 @@ typedef struct
     int misses;
 } player;
 
-void initialize(void);
-void place(void);
-void placeOnBoard(player user, int row, int col, char dir, int length);
-void instructions(void);
-
 //functions to be included with cglGeneral.h
 void clear(void);
 void waitfor(char input);
 void quit(void);
 
+void initialize(void);
 void print(player you, int mode);
+
+void place(void);
+int placeOnBoard(player *user, int row, int col, char dir, int length);
+
+void instructions(void);
+
 int shoot(int user, int row, int col);
 
-int checkPlacement(int user, int shipnr, char *coords, char dir);
 int checkInput(char *input);
 
 int checkWinner(void);
@@ -57,27 +58,62 @@ char coords[FIELD_SIZE][FIELD_SIZE] = {{'0', '1', '2', '3', '4', '5', '6', '7', 
 
 int shipsLengths[MAX_SHIPS] = {2, 3, 3, 4, 5};
 
+
+//debug mode to set seas manually or initialize them to ' '; 0 = debug off, 1 = debug on
+#define SET_SEA_MANUAL 0
+
 //players
-player p1 = {1};
-player p2 = {2};
+player p1 = 
+{1
+#if SET_SEA_MANUAL
+   ,{
+        {'X', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {'X', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {'X', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', 'X', 'X', 'H', 'H', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}
+    }
+#endif
+};
+
+player p2 = 
+{2
+#if SET_SEA_MANUAL
+   /* ,{
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}
+    } */
+#endif
+};
 
 
 int main(void)
 {
+    #if !SET_SEA_MANUAL
+    initialize();
+    #endif
+    
     place();
     return 0;
 }
 
 void initialize(void)
 {
-    for (int i = 0; i < FIELD_SIZE; i++)
-    {
-        for (int j = 0; j < FIELD_SIZE; j++)
-        {
-            p1.sea[i][j] = ' ';
-            p2.sea[i][j] = ' ';
-        }
-    }
+    memset(p1.sea, ' ', sizeof(p1.sea));
+    memset(p2.sea, ' ', sizeof(p2.sea));
 }
 
 //print the board during the game
@@ -88,25 +124,13 @@ void print(player p, int mode ) // mode 0 = place; 1 = in game; 2 = display winn
 
     if (p.id == 1)
     {
-        for (int i = 0; i < FIELD_SIZE; i++)
-        {
-            for (int j = 0; j < FIELD_SIZE; j++)
-            {
-                you[i][j] = p1.sea[i][j];
-                enemy[i][j] = p2.sea[i][j];
-            }
-        }
+        memcpy(you, p1.sea, sizeof(p1.sea));
+        memcpy(enemy, p2.sea, sizeof(p2.sea));
     }
     else if (p.id == 2)
     {
-        for (int i = 0; i < FIELD_SIZE; i++)
-        {
-            for (int j = 0; j < FIELD_SIZE; j++)
-            {
-                you[i][j] = p2.sea[i][j];
-                enemy[i][j] = p1.sea[i][j];
-            }
-        }
+        memcpy(you, p2.sea, sizeof(p2.sea));
+        memcpy(enemy, p1.sea, sizeof(p1.sea));
     }
     else 
     {
@@ -290,7 +314,32 @@ void place(void)
         int row = toupper(input[0]) - 65;
         int col = input[1] - 48;
 
-        placeOnBoard(p1, row, col, dir, shipsLengths[i]);
+        if (placeOnBoard(&p1, row, col, toupper(dir), shipsLengths[i]))
+        {
+            switch (placeOnBoard(&p1, row, col, toupper(dir), shipsLengths[i]))
+            {
+            case 1:
+                printf("Ship is out of bounds, try again!");
+                waitfor('\n');
+                break;
+
+            case 2:
+                printf("Ship is already there, try again!");
+                waitfor('\n');
+                break;
+
+            case 3:
+                printf("Error in usage of function placeOnBoard (this should not happen)");
+                waitfor('\n');
+                break;
+            
+            default:
+                break;
+            }
+
+            i--;
+            continue;
+        }
 
     }
 
@@ -347,45 +396,133 @@ void place(void)
         int row = toupper(input[0]) - 65;
         int col = input[1] - 48;
 
-        placeOnBoard(p2, row, col, toupper(dir), shipsLengths[i]);
+        if (placeOnBoard(&p2, row, col, toupper(dir), shipsLengths[i]))
+        {
+            switch (placeOnBoard(&p1, row, col, toupper(dir), shipsLengths[i]))
+            {
+            case 1:
+                printf("Ship is out of bounds, try again!");
+                waitfor('\n');
+                break;
+
+            case 2:
+                printf("Ship is already there, try again!");
+                waitfor('\n');
+                break;
+
+            case 3:
+                printf("Error in usage of function placeOnBoard (this should not happen)");
+                waitfor('\n');
+                break;
+            
+            default:
+                break;
+            }
+
+            i--;
+            continue;
+        }
 
     }
 }
 
-void placeOnBoard(player user, int row, int col, char dir, int length)
+//returns 0 if the placement is possible; 1 if ship is out of bounds; 2 if ship already there, 3 if error in function usage
+int placeOnBoard(player *user, int row, int col, char dir, int length)
 {
     switch (dir)
     {
     case 'U':
+        if ((row - (length - 1)) < 0)
+        {
+            return 1;
+        }
+
         for (int i = 0, c = row; i < length; i++, c--)
         {
-            user.sea[c][col] = 'X';
+            if (user->sea[c][col] == 'X')
+            {
+                return 2;
+            }
         }
+
+        for (int i = 0, c = row; i < length; i++, c--)
+        {
+            user->sea[c][col] = 'X';
+        }
+        return 0;
         break;
 
     case 'D':
+        if ((row - (length - 1)) > 10)
+        {
+            return 1;
+        }
+
         for (int i = 0, c = row; i < length; i++, c++)
         {
-            user.sea[c][col] = 'X';
+            if (user->sea[c][col] == 'X')
+            {
+                return 2;
+            }
         }
+
+        for (int i = 0, c = row; i < length; i++, c++)
+        {
+            user->sea[c][col] = 'X';
+        }
+        return 0;
         break;
 
     case 'L':
+        if ((col - (length - 1)) < 0)
+        {
+            return 1;
+        }
+
         for (int i = 0, c = col; i < length; i++, c--)
         {
-            user.sea[row][c] = 'X';
+            if (user->sea[row][c] == 'X')
+            {
+                return 2;
+            }
         }
+
+        for (int i = 0, c = col; i < length; i++, c--)
+        {
+            user->sea[row][c] = 'X';
+        }
+        return 0;
         break;
 
     case 'R':
+        if ((col - (length - 1)) > 10)
+        {
+            return 1;
+        }
+
         for (int i = 0, c = col; i < length; i++, c++)
         {
-            user.sea[row][c] = 'X';
+            if (user->sea[row][c] == 'X')
+            {
+                return 2;
+            }
         }
+
+        for (int i = 0, c = col; i < length; i++, c++)
+        {
+            if (user->sea[row][c] == 'X')
+            {
+                return 2;
+            }
+
+            user->sea[row][c] = 'X';
+        }
+        return 0;
         break;
     
     default:
         printf("invalid use of function placeOnBoard");
+        return 3;
         break;
     }
 }
@@ -430,14 +567,7 @@ int checkInput(char *input) //return 0 when is ok, 1 when not
 
 }
 
-int checkPlacement(int user, int shipnr, char *coords, char dir)
-{
-
-    return 0;
-}
-
-
-    //clear the screen
+//clear the screen
 void clear(void)
 {
     printf("\e[1;1H\e[2J");
