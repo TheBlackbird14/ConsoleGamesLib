@@ -453,7 +453,7 @@ int placeOnBoard(player *user, int row, int col, char dir, int length)
         break;
 
     case 'D':
-        if ((row - (length - 1)) > 10)
+        if ((row + (length - 1)) > 10)
         {
             return 1;
         }
@@ -495,7 +495,7 @@ int placeOnBoard(player *user, int row, int col, char dir, int length)
         break;
 
     case 'R':
-        if ((col - (length - 1)) > 10)
+        if ((col + (length - 1)) > 10)
         {
             return 1;
         }
@@ -510,11 +510,6 @@ int placeOnBoard(player *user, int row, int col, char dir, int length)
 
         for (int i = 0, c = col; i < length; i++, c++)
         {
-            if (user->sea[row][c] == 'X')
-            {
-                return 2;
-            }
-
             user->sea[row][c] = 'X';
         }
         return 0;
