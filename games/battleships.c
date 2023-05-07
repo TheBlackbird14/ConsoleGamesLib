@@ -16,6 +16,8 @@
 #define FIELD_SIZE 10
 typedef struct
 {
+    int id;
+
     char sea[FIELD_SIZE][FIELD_SIZE];
 
     //for stats
@@ -26,7 +28,7 @@ typedef struct
 
 void initialize(void);
 void place(void);
-void placeOnBoard(int user, int row, int col, char dir, int length);
+void placeOnBoard(player user, int row, int col, char dir, int length);
 void instructions(void);
 
 //functions to be included with cglGeneral.h
@@ -34,7 +36,7 @@ void clear(void);
 void waitfor(char input);
 void quit(void);
 
-void print(char you[10][10], char enemy[10][10], int mode);
+void print(player you, int mode);
 int shoot(int user, int row, int col);
 
 int checkPlacement(int user, int shipnr, char *coords, char dir);
@@ -56,8 +58,9 @@ char coords[FIELD_SIZE][FIELD_SIZE] = {{'0', '1', '2', '3', '4', '5', '6', '7', 
 int shipsLengths[MAX_SHIPS] = {2, 3, 3, 4, 5};
 
 //players
-player p1;
-player p2;
+player p1 = {1};
+player p2 = {2};
+
 
 int main(void)
 {
@@ -65,19 +68,45 @@ int main(void)
     return 0;
 }
 
+void initialize(void)
+{
+    for (int i = 0; i < FIELD_SIZE; i++)
+    {
+        for (int j = 0; j < FIELD_SIZE; j++)
+        {
+            p1.sea[i][j] = ' ';
+            p2.sea[i][j] = ' ';
+        }
+    }
+}
 
 //print the board during the game
 void print(player p, int mode ) // mode 0 = place; 1 = in game; 2 = display winner
 {
-    if (p == p1)
+    char you[10][10];
+    char enemy[10][10];
+
+    if (p.id == 1)
     {
-        char you[10][10] = p1.sea;
-        char enemy[10][10] = p2.sea;
+        for (int i = 0; i < FIELD_SIZE; i++)
+        {
+            for (int j = 0; j < FIELD_SIZE; j++)
+            {
+                you[i][j] = p1.sea[i][j];
+                enemy[i][j] = p2.sea[i][j];
+            }
+        }
     }
-    else if (p == p2)
+    else if (p.id == 2)
     {
-        char you[10][10] = p2.sea;
-        char enemy[10][10] = p1.sea
+        for (int i = 0; i < FIELD_SIZE; i++)
+        {
+            for (int j = 0; j < FIELD_SIZE; j++)
+            {
+                you[i][j] = p2.sea[i][j];
+                enemy[i][j] = p1.sea[i][j];
+            }
+        }
     }
     else 
     {
@@ -105,26 +134,31 @@ void print(player p, int mode ) // mode 0 = place; 1 = in game; 2 = display winn
         printf("%c", coords[1][i]); //print the row letters
         for (int j = 0; j < 10; j++)
         {
-            //normsal sea (nothing)
+            //normal sea (nothing)
             if (you[i][j] == ' ')
             {
                 printf(" | %s %s", bgBlue, off);
             }
             //ship placed on tile
-            if (you[i][j] == 'X')
+            else if (you[i][j] == 'X')
             {
                 printf(" | %s %s", bgWhite, off);
             }
             //shot fires but missed
-            if (you[i][j] == 'O')
+            else if (you[i][j] == 'O')
             {
                 printf(" | %sO%s", missed, off);
             }
             //shot fired and hit ship
-            if (you[i][j] == 'H')
+            else if (you[i][j] == 'H')
             {
                 printf(" | %sX%s", hitship, off);
             }
+            else 
+            {
+                printf("?");
+            }
+            
         }
         
         printf(" |\n  ");
@@ -168,27 +202,27 @@ void print(player p, int mode ) // mode 0 = place; 1 = in game; 2 = display winn
                 {
                     printf(" | %s %s", bgBlue, off);
                 }
-                
                 //shot fires but missed
-                if (enemy[i][j] == 'O')
+                else if (enemy[i][j] == 'O')
                 {
                     printf(" | %sO%s", missed, off);
                 }
-                
                 //shot fired and hit ship
-                if (enemy[i][j] == 'H')
+                else if (enemy[i][j] == 'H')
                 {
                     printf(" | %sX%s", hitship, off);
                 }
-                
                 //ship placed on tile
-
-                if (mode == 2)
+                else if (mode == 2)
                 {
                     if (enemy[i][j] == 'X')
                     {
                         printf(" | %s %s", bgWhite, off);
                     }
+                }
+                else 
+                {
+                    printf("?");
                 }
             }
 
@@ -203,6 +237,7 @@ void print(player p, int mode ) // mode 0 = place; 1 = in game; 2 = display winn
         }
         printf("\n\n");
     }
+
 }
 
 void place(void)
@@ -236,12 +271,12 @@ void place(void)
         //waitfor('\n');
 
         char dir;
-        int c = 0;
+        c = 0;
 
         do
         {
             printf("Direction (u, d, l, r)> ");
-            scanf("%c", dir);
+            scanf("%c", &dir);
 
             while ((c = getchar()) != '\n' && c != EOF);  // clear input buffer
 
@@ -263,11 +298,96 @@ void place(void)
     printf("ENTER to Place Ships for Player 2");
     waitfor('\n');
 
+    for (int i = 0; i < MAX_SHIPS; i++)
+    {
+        clear();
+        print(p2, 0);
+
+        char input[3];
+        int c;
+
+        do
+        {
+            printf("Place Ship %d with length %d> ", i + 1, shipsLengths[i]);
+            scanf("%2s", input);
+            while ((c = getchar()) != '\n' && c != EOF);  // clear input buffer
+
+            if (checkInput(input) != 0)
+            {
+                printf("Invalid Coordinate entered, try again\n");
+            }
+        }
+        while (checkInput(input) != 0);
+
+        //printf("%s\n", input);
+        //waitfor('\n');
+
+        char dir;
+        c = 0;
+
+        do
+        {
+            printf("Direction (u, d, l, r)> ");
+            scanf("%c", &dir);
+
+            while ((c = getchar()) != '\n' && c != EOF);  // clear input buffer
+
+            if (toupper(dir) == 'Q')
+            {
+                quit();
+            }
+            else if (toupper(dir) != 'U' && toupper(dir) != 'D' && toupper(dir) != 'L' && toupper(dir) != 'R')
+            {
+                printf("\"%c\" is not a valid direction\n", dir);
+            }
+
+        }
+        while (toupper(dir) != 'U' && toupper(dir) != 'D' && toupper(dir) != 'L' && toupper(dir) != 'R');
+
+        int row = toupper(input[0]) - 65;
+        int col = input[1] - 48;
+
+        placeOnBoard(p2, row, col, toupper(dir), shipsLengths[i]);
+
+    }
 }
 
 void placeOnBoard(player user, int row, int col, char dir, int length)
 {
+    switch (dir)
+    {
+    case 'U':
+        for (int i = 0, c = row; i < length; i++, c--)
+        {
+            user.sea[c][col] = 'X';
+        }
+        break;
 
+    case 'D':
+        for (int i = 0, c = row; i < length; i++, c++)
+        {
+            user.sea[c][col] = 'X';
+        }
+        break;
+
+    case 'L':
+        for (int i = 0, c = col; i < length; i++, c--)
+        {
+            user.sea[row][c] = 'X';
+        }
+        break;
+
+    case 'R':
+        for (int i = 0, c = col; i < length; i++, c++)
+        {
+            user.sea[row][c] = 'X';
+        }
+        break;
+    
+    default:
+        printf("invalid use of function placeOnBoard");
+        break;
+    }
 }
 
 //checks if the  entered input is a valid coord
