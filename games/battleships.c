@@ -12,19 +12,6 @@
 #define hitship "\033[31;47m"
 #define missed "\033[37;44m"
 
-//player data
-#define FIELD_SIZE 10
-typedef struct
-{
-    int id;
-
-    char sea[FIELD_SIZE][FIELD_SIZE];
-
-    //for stats
-    int shots;
-    int hits;
-    int misses;
-} player;
 
 //functions to be included with cglGeneral.h
 void clear(void);
@@ -39,19 +26,16 @@ int placeOnBoard(player *user, int row, int col, char dir, int length);
 
 void instructions(void);
 
-int shoot(int user, int row, int col);
+int shoot(player *p, int row, int col);
 
 int checkInput(char *input);
 
 int checkWinner(void);
 
 
-
+#define FIELD_SIZE 10
 
 char coords[FIELD_SIZE][FIELD_SIZE] = {{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}, {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'}};
-
-
-//space for global variables
 
 //ships
 #define MAX_SHIPS 5
@@ -61,6 +45,22 @@ int shipsLengths[MAX_SHIPS] = {2, 3, 3, 4, 5};
 
 //debug mode to set seas manually or initialize them to ' '; 0 = debug off, 1 = debug on
 #define SET_SEA_MANUAL 0
+
+//player data
+typedef struct
+{
+    int id;
+
+    char sea[FIELD_SIZE][FIELD_SIZE];
+
+    bool isTurn;
+
+    //for stats
+    int shots;
+    int hits;
+    int misses;
+} player;
+
 
 //players
 player p1 = 
@@ -84,7 +84,7 @@ player p1 =
 player p2 = 
 {2
 #if SET_SEA_MANUAL
-   /* ,{
+   ,{
         {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
         {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
         {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -95,7 +95,7 @@ player p2 =
         {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
         {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
         {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}
-    } */
+    }
 #endif
 };
 
@@ -105,8 +105,65 @@ int main(void)
     #if !SET_SEA_MANUAL
     initialize();
     #endif
-    
-    place();
+
+    instructions();
+
+    bool done = false;
+    int turns = 0;
+
+    while (!done)
+    {
+        /* clear();
+
+        //if round has started
+        if (turns = 0)
+        {
+            //let players place ships
+            place();
+            printf("ENTER to start as player 1");
+            p1.isTurn = true;
+            p2.isTurn = false;
+        }
+        else
+        {
+            printf("ENTER to continue as player 1");
+        }
+
+        waitfor('\n');
+
+
+        while(p1.isTurn)
+        {
+            char *input;
+
+            do
+            {
+                
+            } while (!checkInput(input));
+            
+            //if hit print HIT! and continue;
+            //if if won print(p1, 2)
+            //if miss print MISS! p1.isTurn = false; p2.isTurn = true
+            //printf ENTER to end turn; waitfor('\n');
+        }
+        
+        clear();
+        printf("ENTER to continue as player 2");
+        waitfor('\n');
+        
+        while(p2.isTurn)
+        {
+            //shoot
+            //if hit print HIT! and continue;
+            //if if won print(p2, 2)
+            //if miss print MISS! p2.isTurn = false; p1.isTurn = true
+            //printf ENTER to end turn; waitfor('\n');
+        } */
+    }
+
+    clear();
+    printf("Until Next Time!\n");
+
     return 0;
 }
 
@@ -558,6 +615,29 @@ int checkInput(char *input) //return 0 when is ok, 1 when not
     else
     {
         return 1;
+    }
+
+}
+
+
+//return 0 if miss, 1 if hit, 2 if already hit, 3 if usage error
+int shoot(player *p, int row, int col)
+{
+    switch (p->sea[row][col])
+    {
+    case ' ':
+        return 0;
+
+    case 'X':
+        p->sea[row][col] = 'H';
+        return 1;
+
+    case 'H':
+    case 'O':
+        return 2;
+    
+    default:
+        return 3;
     }
 
 }
