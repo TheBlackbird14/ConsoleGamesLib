@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Delete dSYM",
+            "type": "shell",
+            "command": "rm -rf ${workspaceFolder}/**/**/*.dSYM"
+        },
+        {
+            "label": "compile bships",
+            "type": "shell",
+            "command": "clang -o games/battleships games/battleships.c libs/strcap.c libs/cs50.c -g"
+        }
+    ]
+}
