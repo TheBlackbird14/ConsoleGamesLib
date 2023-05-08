@@ -44,3 +44,4 @@
 #define warning "\033[37;41m"
 #define title "\033[1;32;44m"
 #define caution "\033[31;43m"
+#define win "\033[43;30m"
