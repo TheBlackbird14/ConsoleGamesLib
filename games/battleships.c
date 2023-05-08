@@ -12,40 +12,7 @@
 #define hitship "\033[31;47m"
 #define missed "\033[37;44m"
 
-
-//functions to be included with cglGeneral.h
-void clear(void);
-void waitfor(char input);
-void quit(void);
-
-void initialize(void);
-void print(player you, int mode);
-
-void place(void);
-int placeOnBoard(player *user, int row, int col, char dir, int length);
-
-void instructions(void);
-
-int shoot(player *p, int row, int col);
-
-int checkInput(char *input);
-
-int checkWinner(void);
-
-
 #define FIELD_SIZE 10
-
-char coords[FIELD_SIZE][FIELD_SIZE] = {{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}, {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'}};
-
-//ships
-#define MAX_SHIPS 5
-
-int shipsLengths[MAX_SHIPS] = {2, 3, 3, 4, 5};
-
-
-//debug mode to set seas manually or initialize them to ' '; 0 = debug off, 1 = debug on
-#define SET_SEA_MANUAL 0
-
 //player data
 typedef struct
 {
@@ -60,6 +27,40 @@ typedef struct
     int hits;
     int misses;
 } player;
+
+//functions to be included with cglGeneral.h
+void clear(void);
+void waitfor(char input);
+void quit(void);
+
+void initialize(void);
+void print(int id, int mode);
+
+void place(void);
+int placeOnBoard(player *user, int row, int col, char dir, int length);
+
+void instructions(void);
+
+void turn(player *p);
+int shoot(player *p, int row, int col);
+
+int checkInput(char *input);
+
+int checkWinner(void);
+
+
+
+char coords[FIELD_SIZE][FIELD_SIZE] = {{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}, {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'}};
+
+//ships
+#define MAX_SHIPS 5
+
+int shipsLengths[MAX_SHIPS] = {2, 3, 3, 4, 5};
+
+
+//debug mode to set seas manually or initialize them to ' '; 0 = debug off, 1 = debug on
+#define SET_SEA_MANUAL 0
+
 
 
 //players
@@ -99,6 +100,7 @@ player p2 =
 #endif
 };
 
+int turns = 0;
 
 int main(void)
 {
@@ -106,13 +108,27 @@ int main(void)
     initialize();
     #endif
 
+    clear();
     instructions();
 
     bool done = false;
-    int turns = 0;
 
     while (!done)
     {
+        if (turns == 0)
+        {
+            printf("ENTER to start as player 1");
+        }
+
+        waitfor('\n');
+        clear();
+
+        turn(&p1);
+        waitfor('\n');
+
+        turn(&p2);
+        waitfor('\n');
+
         /* clear();
 
         //if round has started
@@ -167,24 +183,97 @@ int main(void)
     return 0;
 }
 
+void turn(player *p)
+{
+    clear();
+
+    if (turns > 1)
+    {
+        printf("ENTER to continue as player %d", p->id);
+    }
+    
+    waitfor('\n');
+
+    while (p->isTurn)
+    {
+        clear();
+        print(p->id, 1);
+
+        char *input;
+        bool valid;
+
+        do
+        {
+            print(p->id, 1);
+            printf("Player 1> ");
+            scanf("%2s", input);
+
+            if (checkInput(input))
+            {
+                int row = input[0];
+                int col = input[1];
+
+                switch (shoot(p, row, col))
+                {
+                case 0:
+                    printf("MISS! ENTER to end turn");
+                    valid = true;
+                    p->isTurn = false;
+                    waitfor('\n');
+                    break;
+
+                case 1:
+                    printf("HIT! ENTER to go again");
+                    valid = true;
+                    p->isTurn = true;
+                    waitfor('\n');
+                    break;
+
+                case 2:
+                    printf("You've already shot there. ENTER to try again");
+                    valid = false;
+                    p->isTurn = true;
+                    waitfor('\n');
+                    break;
+
+                case 3:
+                    printf("usage error");
+                    valid = false;
+                    p->isTurn = true;
+                    waitfor('\n');
+                    break;
+                
+                default:
+                    printf("unknown error");
+                    break;
+                }
+            }
+
+        } while(!valid);
+    }
+    
+    turns++;
+    
+}
+
 void initialize(void)
 {
     memset(p1.sea, ' ', sizeof(p1.sea));
     memset(p2.sea, ' ', sizeof(p2.sea));
 }
 
-//print the board during the game
-void print(player p, int mode ) // mode 0 = place; 1 = in game; 2 = display winner
+//print the board during the game; pass in player id and mode
+void print(int id, int mode ) // mode 0 = place; 1 = in game; 2 = display winner
 {
     char you[10][10];
     char enemy[10][10];
 
-    if (p.id == 1)
+    if (id == 1)
     {
         memcpy(you, p1.sea, sizeof(p1.sea));
         memcpy(enemy, p2.sea, sizeof(p2.sea));
     }
-    else if (p.id == 2)
+    else if (id == 2)
     {
         memcpy(you, p2.sea, sizeof(p2.sea));
         memcpy(enemy, p1.sea, sizeof(p1.sea));
@@ -330,7 +419,7 @@ void place(void)
     for (int i = 0; i < MAX_SHIPS; i++)
     {
         clear();
-        print(p1, 0);
+        print(p1.id, 0);
 
         char input[3];
         int c;
@@ -407,7 +496,7 @@ void place(void)
     for (int i = 0; i < MAX_SHIPS; i++)
     {
         clear();
-        print(p2, 0);
+        print(p2.id, 0);
 
         char input[3];
         int c;
