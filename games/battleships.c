@@ -34,19 +34,20 @@ void waitfor(char input);
 void quit(void);
 
 void initialize(void);
+void instructions(void);
 void print(int id, int mode);
 
 void place(void);
 int placeOnBoard(player *user, int row, int col, char dir, int length);
 
-void instructions(void);
 
-void turn(player *p);
+int turn(player *p);
 int shoot(player *p, int row, int col);
 
 int checkInput(char *input);
 
-int checkWinner(void);
+int checkWinner(player *p);
+int won(player *p);
 
 
 
@@ -57,9 +58,11 @@ char coords[FIELD_SIZE][FIELD_SIZE] = {{'0', '1', '2', '3', '4', '5', '6', '7', 
 
 int shipsLengths[MAX_SHIPS] = {2, 3, 3, 4, 5};
 
-
+//Debug switches
 //debug mode to set seas manually or initialize them to ' '; 0 = debug off, 1 = debug on
-#define SET_SEA_MANUAL 1
+#define SET_SEA_MANUAL 0
+//enable debug prints troughout the file
+#define DEBUG_PRINTS 0
 
 
 
@@ -105,7 +108,7 @@ int turns = 0;
 int main(void)
 {
     #if !SET_SEA_MANUAL
-    initialize();
+        initialize();
     #endif
 
     clear();
@@ -121,8 +124,8 @@ int main(void)
             printf("ENTER to start as player 1");
 
             #if !SET_SEA_MANUAL
-            initialize();
-            place();
+                initialize();
+                place();
             #endif
 
             p1.isTurn = true;
@@ -131,9 +134,39 @@ int main(void)
 
         clear();
 
-        turn(&p1);
+        int r1 = turn(&p1);
 
-        turn(&p2);
+        if (r1 == 1)
+        {
+            int r = won(&p1);
+            if (r == 1)
+            {
+                turns = 0;
+                continue;
+            }
+            else
+            {
+                done = true;
+                continue;
+            }
+        }
+
+        int r2 = turn(&p2);
+
+        if (r2 == 1)
+        {
+            int r = won(&p2);
+            if (r == 1)
+            {
+                turns = 0;
+                continue;
+            }
+            else
+            {
+                done = true;
+                continue;
+            }
+        }
     }
 
     clear();
@@ -142,7 +175,7 @@ int main(void)
     return 0;
 }
 
-void turn(player *p)
+int turn(player *p)
 {
 
     player *you;
@@ -160,7 +193,7 @@ void turn(player *p)
     }
 
     clear();
-    if (turns > 1)
+    if (turns > 0)
     {
         printf("ENTER to continue as player %d", p->id);
         waitfor('\n');
@@ -170,7 +203,7 @@ void turn(player *p)
     while (p->isTurn)
     {
 
-        char *input = malloc(3);
+        char input[3];
         bool valid = false;
 
         do
@@ -180,6 +213,7 @@ void turn(player *p)
             printf("Player %d> ", p->id);
             scanf("%2s", input);
 
+            // if input is valid
             if (!checkInput(input))
             {
                 int row = (int) toupper(input[0]) - 65;
@@ -187,60 +221,80 @@ void turn(player *p)
 
                 int returnValue = shoot(enemy, row, col);
 
-                //printf("return value = %d\n", returnValue);
+
+                #if DEBUG_PRINTS
+                    printf("return value of shoot = %d\n", returnValue);
+                #endif
+                
                 clear();
                 print(p->id, 1);
-                while(getchar() != '\n');
+                waitfor('\n');
 
                 switch (returnValue)
                 {
-                    case 0:
+                    case 0: //miss
                         printf("MISS! ENTER to end turn");
-                        while(getchar() != '\n');
+                        waitfor('\n');
                         valid = true;
                         p->isTurn = false;
                         break;
 
-                    case 1:
+                    case 1: //hit
                         printf("HIT! ENTER to go again");
-                        while(getchar() != '\n');
+                        waitfor('\n');
                         valid = true;
                         p->isTurn = true;
                         break;
 
-                    case 2:
+                    case 2: //already shot
                         printf("You've already shot there. ENTER to try again");
-                        while(getchar() != '\n');
+                        waitfor('\n');
                         valid = false;
                         p->isTurn = true;
                         break;
 
-                    case 3:
+                    case 3: //shoot returns 3 in default case (if no other case has worked, so there must be an error of some kind)
                         printf("usage error");
-                        while(getchar() != '\n');
+                        waitfor('\n');
                         valid = false;
                         p->isTurn = true;
                         break;
                     
-                    default:
+                    default: //this should not happen
                         printf("unknown error");
-                        while(getchar() != '\n');
+                        waitfor('\n');
                         break;
                 }
+                
+                #if DEBUG_PRINTS
+                    waitfor('\n');
+                    printf("won return = %d\n", checkWinner(p));
+                    waitfor('\n');
+                #endif
+                //if player has won 
+                if (checkWinner(p) == 1)
+                {
+                    return 1;
+                }
+
             }
-            else
+            else //if input is invalid
             {
+                waitfor('\n');
+                printf("Invalid coordinate. ENTER to try again!");
+                waitfor('\n');
                 valid = false;
             }
 
         } while(!valid);
-        free(input);
     }
     
     turns++;
 
     you->isTurn = false;
     enemy->isTurn = true;
+
+    return 0;
 }
 
 void initialize(void)
@@ -250,7 +304,8 @@ void initialize(void)
 }
 
 //print the board during the game; pass in player id and mode
-void print(int id, int mode ) // mode 0 = place; 1 = in game; 2 = display winner
+// mode 0 = place; 1 = in game; 2 = display winner
+void print(int id, int mode ) 
 {
     char you[10][10];
     char enemy[10][10];
@@ -428,8 +483,10 @@ void place(void)
         }
         while (checkInput(input) != 0);
 
-        //printf("%s\n", input);
-        //waitfor('\n');
+        #if DEBUG_PRINTS
+            printf("%s\n", input);
+            waitfor('\n');
+        #endif
 
         char dir;
         c = 0;
@@ -505,8 +562,10 @@ void place(void)
         }
         while (checkInput(input) != 0);
 
-        //printf("%s\n", input);
-        //waitfor('\n');
+        #if DEBUG_PRINTS
+            printf("%s\n", input);
+            waitfor('\n');
+        #endif
 
         char dir;
         c = 0;
@@ -723,6 +782,77 @@ int shoot(player *p, int row, int col)
         return 3;
     }
 
+}
+
+//prints winning screen and ask for another round
+//return 0 = quit, 1 continue
+int won(player *p)
+{
+    clear();
+    printf("%sPlayer %d has Won!%s\n", win, p->id, off);
+    print(p->id, 2);
+
+    char input;
+
+    do
+    {
+        printf("Play another round? (y/n)> ");
+        scanf("%c", &input);
+        waitfor('\n');
+    } while (toupper(input) != 'Y' && toupper(input) != 'N');
+    
+    if (toupper(input) == 'Y')
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+// 0 if has not won, 1 if has won, 2 = error
+int checkWinner(player *p)
+{
+    player *enemy;
+    if (p->id == 1)
+    {
+        enemy = &p2;
+    }
+    else if (p->id == 2)
+    {
+        enemy = &p1;
+    }
+    else 
+    {
+        return 2;
+    }
+
+    bool shipsLeft = false;
+    for (int i = 0; i < FIELD_SIZE; i++)
+    {
+        for (int j = 0; j < FIELD_SIZE; j++)
+        {
+            if (enemy->sea[i][j] == 'X')
+            {
+                shipsLeft = true;
+                break;
+            }
+        }
+        if (shipsLeft == true)
+        {
+            break;
+        }
+    }
+
+    if (shipsLeft == true)
+    {
+        return 0;
+    }
+    else 
+    {
+        return 1;
+    }
 }
 
 //clear the screen
