@@ -59,7 +59,7 @@ int shipsLengths[MAX_SHIPS] = {2, 3, 3, 4, 5};
 
 
 //debug mode to set seas manually or initialize them to ' '; 0 = debug off, 1 = debug on
-#define SET_SEA_MANUAL 0
+#define SET_SEA_MANUAL 1
 
 
 
@@ -86,14 +86,14 @@ player p2 =
 {2
 #if SET_SEA_MANUAL
    ,{
+        {'X', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {'X', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {'X', ' ', ' ', 'H', 'H', 'X', 'X', ' ', ' ', ' '},
         {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
         {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', 'O', ' ', ' ', ' ', ' ', ' ', ' '},
         {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', 'O', ' ', ' ', ' '},
         {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
         {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}
     }
@@ -117,64 +117,23 @@ int main(void)
     {
         if (turns == 0)
         {
+            clear();
             printf("ENTER to start as player 1");
+
+            #if !SET_SEA_MANUAL
+            initialize();
+            place();
+            #endif
+
+            p1.isTurn = true;
+            waitfor('\n');
         }
 
-        waitfor('\n');
         clear();
 
         turn(&p1);
-        waitfor('\n');
 
         turn(&p2);
-        waitfor('\n');
-
-        /* clear();
-
-        //if round has started
-        if (turns = 0)
-        {
-            //let players place ships
-            place();
-            printf("ENTER to start as player 1");
-            p1.isTurn = true;
-            p2.isTurn = false;
-        }
-        else
-        {
-            printf("ENTER to continue as player 1");
-        }
-
-        waitfor('\n');
-
-
-        while(p1.isTurn)
-        {
-            char *input;
-
-            do
-            {
-                
-            } while (!checkInput(input));
-            
-            //if hit print HIT! and continue;
-            //if if won print(p1, 2)
-            //if miss print MISS! p1.isTurn = false; p2.isTurn = true
-            //printf ENTER to end turn; waitfor('\n');
-        }
-        
-        clear();
-        printf("ENTER to continue as player 2");
-        waitfor('\n');
-        
-        while(p2.isTurn)
-        {
-            //shoot
-            //if hit print HIT! and continue;
-            //if if won print(p2, 2)
-            //if miss print MISS! p2.isTurn = false; p1.isTurn = true
-            //printf ENTER to end turn; waitfor('\n');
-        } */
     }
 
     clear();
@@ -185,75 +144,103 @@ int main(void)
 
 void turn(player *p)
 {
-    clear();
 
+    player *you;
+    player *enemy;
+    
+    if (p->id == 1)
+    {
+        you = &p1;
+        enemy = &p2;
+    }
+    else if (p->id == 2)
+    {
+        you = &p2;
+        enemy = &p1;
+    }
+
+    clear();
     if (turns > 1)
     {
         printf("ENTER to continue as player %d", p->id);
+        waitfor('\n');
     }
     
-    waitfor('\n');
 
     while (p->isTurn)
     {
-        clear();
-        print(p->id, 1);
 
-        char *input;
-        bool valid;
+        char *input = malloc(3);
+        bool valid = false;
 
         do
         {
+            clear();
             print(p->id, 1);
-            printf("Player 1> ");
+            printf("Player %d> ", p->id);
             scanf("%2s", input);
 
-            if (checkInput(input))
+            if (!checkInput(input))
             {
-                int row = input[0];
-                int col = input[1];
+                int row = (int) toupper(input[0]) - 65;
+                int col = (int) input[1] - 48;
 
-                switch (shoot(p, row, col))
+                int returnValue = shoot(enemy, row, col);
+
+                //printf("return value = %d\n", returnValue);
+                clear();
+                print(p->id, 1);
+                while(getchar() != '\n');
+
+                switch (returnValue)
                 {
-                case 0:
-                    printf("MISS! ENTER to end turn");
-                    valid = true;
-                    p->isTurn = false;
-                    waitfor('\n');
-                    break;
+                    case 0:
+                        printf("MISS! ENTER to end turn");
+                        while(getchar() != '\n');
+                        valid = true;
+                        p->isTurn = false;
+                        break;
 
-                case 1:
-                    printf("HIT! ENTER to go again");
-                    valid = true;
-                    p->isTurn = true;
-                    waitfor('\n');
-                    break;
+                    case 1:
+                        printf("HIT! ENTER to go again");
+                        while(getchar() != '\n');
+                        valid = true;
+                        p->isTurn = true;
+                        break;
 
-                case 2:
-                    printf("You've already shot there. ENTER to try again");
-                    valid = false;
-                    p->isTurn = true;
-                    waitfor('\n');
-                    break;
+                    case 2:
+                        printf("You've already shot there. ENTER to try again");
+                        while(getchar() != '\n');
+                        valid = false;
+                        p->isTurn = true;
+                        break;
 
-                case 3:
-                    printf("usage error");
-                    valid = false;
-                    p->isTurn = true;
-                    waitfor('\n');
-                    break;
-                
-                default:
-                    printf("unknown error");
-                    break;
+                    case 3:
+                        printf("usage error");
+                        while(getchar() != '\n');
+                        valid = false;
+                        p->isTurn = true;
+                        break;
+                    
+                    default:
+                        printf("unknown error");
+                        while(getchar() != '\n');
+                        break;
                 }
+            }
+            else
+            {
+                valid = false;
             }
 
         } while(!valid);
+        free(input);
     }
     
     turns++;
-    
+
+    you->isTurn = false;
+    enemy->isTurn = true;
 }
 
 void initialize(void)
@@ -383,11 +370,15 @@ void print(int id, int mode ) // mode 0 = place; 1 = in game; 2 = display winner
                     printf(" | %sX%s", hitship, off);
                 }
                 //ship placed on tile
-                else if (mode == 2)
+                else if (enemy[i][j] == 'X')
                 {
-                    if (enemy[i][j] == 'X')
+                    if (mode == 2)
                     {
                         printf(" | %s %s", bgWhite, off);
+                    }
+                    else
+                    {
+                        printf(" | %s %s", bgBlue, off);
                     }
                 }
                 else 
@@ -715,6 +706,7 @@ int shoot(player *p, int row, int col)
     switch (p->sea[row][col])
     {
     case ' ':
+        p->sea[row][col] = 'O';
         return 0;
 
     case 'X':
@@ -722,6 +714,8 @@ int shoot(player *p, int row, int col)
         return 1;
 
     case 'H':
+        return 2;
+
     case 'O':
         return 2;
     
