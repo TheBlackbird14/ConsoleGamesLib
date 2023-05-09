@@ -60,7 +60,7 @@ int shipsLengths[MAX_SHIPS] = {2, 3, 3, 4, 5};
 
 //Debug switches
 //debug mode to set seas manually in the program or initialize them to ' '; 0 = debug off, 1 = debug on
-#define SET_SEA_MANUAL 1
+#define SET_SEA_MANUAL 0
 //enable debug prints troughout the file
 #define DEBUG_PRINTS 0
 
