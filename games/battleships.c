@@ -59,8 +59,8 @@ char coords[FIELD_SIZE][FIELD_SIZE] = {{'0', '1', '2', '3', '4', '5', '6', '7', 
 int shipsLengths[MAX_SHIPS] = {2, 3, 3, 4, 5};
 
 //Debug switches
-//debug mode to set seas manually or initialize them to ' '; 0 = debug off, 1 = debug on
-#define SET_SEA_MANUAL 0
+//debug mode to set seas manually in the program or initialize them to ' '; 0 = debug off, 1 = debug on
+#define SET_SEA_MANUAL 1
 //enable debug prints troughout the file
 #define DEBUG_PRINTS 0
 
@@ -198,6 +198,11 @@ int turn(player *p)
         printf("ENTER to continue as player %d", p->id);
         waitfor('\n');
     }
+    else
+    {
+        printf("ENTER to start as player 1");
+        waitfor('\n');
+    }
     
 
     while (p->isTurn)
@@ -305,8 +310,15 @@ void initialize(void)
 
 //print the board during the game; pass in player id and mode
 // mode 0 = place; 1 = in game; 2 = display winner
-void print(int id, int mode ) 
+void print(int id, int mode) 
 {
+    char water[9] = bgBlue;
+
+    if (mode == 2)
+    {
+        strcpy(water, bgYellow);
+    }
+
     char you[10][10];
     char enemy[10][10];
 
@@ -349,7 +361,7 @@ void print(int id, int mode )
             //normal sea (nothing)
             if (you[i][j] == ' ')
             {
-                printf(" | %s %s", bgBlue, off);
+                printf(" | %s %s", water, off);
             }
             //ship placed on tile
             else if (you[i][j] == 'X')
@@ -412,7 +424,7 @@ void print(int id, int mode )
                 //normsal sea (nothing)
                 if (enemy[i][j] == ' ')
                 {
-                    printf(" | %s %s", bgBlue, off);
+                    printf(" | %s %s", water, off);
                 }
                 //shot fires but missed
                 else if (enemy[i][j] == 'O')
@@ -537,6 +549,9 @@ void place(void)
 
     }
 
+
+    printf("ENTER to end turn");
+    waitfor('\n');
     clear();
     printf("ENTER to Place Ships for Player 2");
     waitfor('\n');
@@ -620,6 +635,8 @@ void place(void)
         }
 
     }
+
+    printf("ENTER to end turn and start game");
 }
 
 //returns 0 if the placement is possible; 1 if ship is out of bounds; 2 if ship already there, 3 if error in function usage
