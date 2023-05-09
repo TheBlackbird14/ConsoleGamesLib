@@ -549,7 +549,8 @@ void place(void)
 
     }
 
-
+    clear();
+    print(p1.id, 0);
     printf("ENTER to end turn");
     waitfor('\n');
     clear();
@@ -636,6 +637,8 @@ void place(void)
 
     }
 
+    clear();
+    print(p2.id, 0);
     printf("ENTER to end turn and start game");
 }
 
@@ -890,7 +893,8 @@ void instructions(void)
     printf("%sWelcome to %sBattleships!%s\n", red, bgWhite, off);
     printf("In this game you shoot at eachothers ships and try to sink all your enemies ships first.\n");
     printf("But first, you have to %splace%s your ships at the beginning of the game.\n", cyan, off);
-    printf("To do so, enter the %scoordinate%s at which the ships should start, and then the %sdirection%s it should point to (%su%sp, %sd%sown, %sl%seft, %sr%sight)\n", yellow, off, yellow, off, uWhite, off, uWhite, off, uWhite, off, uWhite, off);
+    printf("To do so, enter the %scoordinate%s at which the ships should start, and then the %sdirection%s it should point to (%su%sp, %sd%sown, %sl%seft, %sr%sight).\n", yellow, off, yellow, off, uWhite, off, uWhite, off, uWhite, off, uWhite, off);
+    printf("To enter a %scoordinate%s, look at the grid captions, then write the %srow%s first, then the %scolumn%s (eg %sd8%s).\n", yellow, off, red, off, red, off, uWhite, off);
     printf("%sPlayer 1%s starts. have fun!\n\n", green, off);
     printf("Press %sENTER%s to start", bRed, off);
     
