@@ -126,8 +126,7 @@ void instructions(void)
     printf("To start a game, type its number or full name and hit enter.\n");
     printf("For example, to start the game of Tic Tac Toe, type %s1%s or %stictactoe%s.\n\n", cyan, off, cyan, off);
     printf("To see a list of all available commands, type %shelp%s.\n", purple, off);
-    printf("Enjoy your gaming experience with %sConsoleGamesLib%s!\n", blue, off);
-
+    printf("Enjoy your gaming experience with %sConsoleGamesLib%s!\n\n", blue, off);
 }
 
 void help(void)
