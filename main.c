@@ -5,7 +5,6 @@
 
 #include "./libs/strcap.h"
 #include "./libs/colors.h"
-#include "./libs/cs50.h"
 
 int checkInput(char *input);
 void quit(void);
@@ -18,7 +17,7 @@ bool done;
 
 #define totalGames 2
 
-char *games[2][totalGames] = {{"TICTACTOE", "BATTLESHIPS"}, {"1", "2"}};
+char *games[2][totalGames] = {{"tictactoe", "battleships"}, {"1", "2"}};
 
 int main(void)
 {
@@ -26,15 +25,16 @@ int main(void)
 
     instructions();
 
-    string input;
 
     while(!done)
     {
+        char input[21];
         do
         {
-            input = strup(get_string("ConsoleGamesLib> "));
+            printf("ConsoleGamesLib> ");
+            scanf("%20s", input);
         }
-        while ((checkInput(input) - 1)  < 0);
+        while ((checkInput(strlow(input)) - 1)  < 0);
 
         int gameNum;
         char rungame[strlen(input)];
@@ -61,19 +61,17 @@ int main(void)
 int checkInput(char *input)
 {
     bool valid = false;
-    int gameNum;
+    int gameNum = 0;
 
-    if (strcmp(input, "QUIT") == 0)
+    if (strcmp(input, "quit") == 0)
     {
         quit();
     }
-
-    if (strcmp(input, "HELP") == 0)
+    else if (strcmp(input, "help") == 0)
     {
         help();
     }
-
-    if (strcmp(input, "LIST") == 0)
+    else if (strcmp(input, "list") == 0)
     {
         list();
     }
@@ -140,7 +138,7 @@ void list(void)
     printf("\n");
     for (int i = 0; i < totalGames; i++)
     {
-        printf("%d. %s\n", i + 1, strlow(games[0][i]));
+        printf("%d. %s\n", i + 1, games[0][i]);
     }
     printf("\n");
 }
