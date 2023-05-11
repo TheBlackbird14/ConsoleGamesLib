@@ -1,3 +1,14 @@
+#execs
 cgl
 games/battleships
 games/tictactoe
+
+#cmake created files
+CMakeFiles/
+build/
+cmake_install.cmake
+CMakeCache.txt
+install_manifest.txt
+Makefile
+#libs
+*.a
