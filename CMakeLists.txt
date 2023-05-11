@@ -22,7 +22,13 @@ target_link_libraries(battleships strcap cs50)
 
 # Set the output directory for the executables
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/build)
-set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/libs)
+set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/build)
 
 # Install the cgl executable to /usr/local/bin
 install(TARGETS cgl DESTINATION /usr/local/bin)
+
+#mute warnings for tictactoe
+
+target_compile_options(tictactoe PRIVATE "-w")
+
+set(CMAKE_BUILD_TYPE Release)

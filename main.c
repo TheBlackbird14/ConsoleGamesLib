@@ -43,10 +43,12 @@ int main(void)
         strcpy(rungame, games[0][gameNum]);
 
 
-        char command[50] = "./games/";
+        char command[50] = "./build/";
         strcat(command, strlow(rungame));
 
-        //printf("%s\n", command);
+        /* printf("%s\n", command);
+        while (getchar() != '\n');
+        while (getchar() != '\n'); */
 
         system(command);
 

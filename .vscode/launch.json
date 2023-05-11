@@ -13,6 +13,14 @@
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "compile bships",
             "postDebugTask": "Delete dSYM"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug main",
+            "program": "${workspaceFolder}/build/cgl",
+            "cwd": "${workspaceFolder}",
+            "postDebugTask": "Delete dSYM"
         }
     ]
 }

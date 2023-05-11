@@ -12,3 +12,8 @@ install_manifest.txt
 Makefile
 #libs
 *.a
+
+#other
+.DS_Store
+.dSYM
+*.dSYM/*
