@@ -4,11 +4,10 @@
 #include <ctype.h>
 #include <wchar.h>
 #include <locale.h>
+#include <stdbool.h>
 
 #include "../libs/strcap.h"
 #include "../libs/colors.h"
-#include "../libs/cs50.h"
-
 
 
 void initialize(void);
@@ -43,7 +42,7 @@ int main(void)
 
 	char user = 'X';
 	char startingUser = 'X';
-	string input;
+
 
 	while(!done)
 	{
@@ -57,12 +56,22 @@ int main(void)
 		if(user == 'X')
 		{
 			turns++;
+
+			char input[5];
+			int c;
 			do
 			{
-				input = strup(get_string(green"X" off " Turn> "purple));
+				printf(green"X" off " Turn> "purple);
+				scanf("%4s", input);
 				printf(off);
-			}
-			while(checkInput(input) != 0);
+				while ((c = getchar()) != '\n' && c != EOF);  // clear input buffer
+
+				//printf("%s\n", strup(input));
+				//while (getchar() != '\n');
+
+			} 
+			while(checkInput(strup(input)) != 0);
+
 			if (reset == true)
 			{
 				clearBoard();
@@ -76,12 +85,18 @@ int main(void)
 		else
 		{
 			turns++;
+
+			char input[5];
+			int c;
 			do
 			{
-				input = strup(get_string(green"O" off " Turn> "purple));
+				printf(green"O" off " Turn> "purple);
+				scanf("%4s", input);
 				printf(off);
-			}
-			while(checkInput(input) != 0);
+				while ((c = getchar()) != '\n' && c != EOF);  // clear input buffer
+			} 
+			while(checkInput(strup(input)) != 0);
+
 			if (reset == true)
 			{
 				clearBoard();
@@ -99,7 +114,8 @@ int main(void)
 
 			do
 			{
-				repeat = get_char(uGreen "Play another Round(y/n)> " bgRed);
+				printf(uGreen "Play another Round(y/n)> " bgRed);
+				scanf("%1c", &repeat);
 				printf(off);
 			}
 			while(toupper(repeat) != 'Y' && toupper(repeat) != 'N');
@@ -219,7 +235,7 @@ void setTile(char filler, char row, char column)
 	int arow;
 	int acolumn;
 
-	switch(row)
+	switch(toupper(row))
 	{
 		case 'T':
 			arow = 0;
@@ -232,7 +248,7 @@ void setTile(char filler, char row, char column)
 			break;
 	}
 
-	switch(column)
+	switch(toupper(column))
 	{
 		case 'L':
 			acolumn = 0;
@@ -353,7 +369,8 @@ int won(void)
 
 	do
 	{
-		repeat = get_char(uGreen "Play another Round(y/n)> " bgRed);
+		printf(uGreen "Play another Round(y/n)> " bgRed);
+		scanf("%1c", &repeat);
 		printf(off);
 	}
 	while(toupper(repeat) != 'Y' && toupper(repeat) != 'N');

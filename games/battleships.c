@@ -6,7 +6,6 @@
 
 
 #include "../libs/strcap.h"
-//#include "../libs/cs50.h"
 #include "../libs/colors.h"
 
 #define hitship "\033[31;47m"

@@ -21,6 +21,14 @@
             "program": "${workspaceFolder}/build/cgl",
             "cwd": "${workspaceFolder}",
             "postDebugTask": "Delete dSYM"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug tictactoe",
+            "program": "${workspaceFolder}/build/tictactoe",
+            "cwd": "${workspaceFolder}",
+            "postDebugTask": "Delete dSYM"
         }
     ]
 }

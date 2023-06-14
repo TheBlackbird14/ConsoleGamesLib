@@ -10,6 +10,12 @@
             "label": "compile bships",
             "type": "shell",
             "command": "clang -o games/battleships games/battleships.c libs/strcap.c libs/cs50.c -g"
+        },
+        {
+            "label": "deleteCMakeCache",
+            "type": "shell",
+            "command": "rm -rf ${workspaceFolder}/CMakeFiles ${workspaceFolder}/build ${workspaceFolder}/cmake_install.cmake ${workspaceFolder}/CMakeCache.txt ${workspaceFolder}/install_manifest.txt ${workspaceFolder}/Makefile",
+            "problemMatcher": []
         }
     ]
 }

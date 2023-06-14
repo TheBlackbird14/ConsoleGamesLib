@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <limits.h>
+#include <unistd.h>
+#include <libgen.h>
 
 #include "./libs/strcap.h"
 #include "./libs/colors.h"
@@ -13,48 +16,91 @@ void instructions();
 void help(void);
 void list(void);
 
-bool done;
+
 
 #define totalGames 2
 
 char *games[2][totalGames] = {{"tictactoe", "battleships"}, {"1", "2"}};
 
-int main(void)
+int main(int argc, char *argv[])
 {
     clear();
 
     instructions();
 
 
-    while(!done)
+    while(1)
     {
         char input[21];
         do
         {
             printf("ConsoleGamesLib> ");
-            scanf("%20s", input);
+            int tmp = scanf(" %20s", input);
+            if (tmp == EOF || tmp == -1)
+            {
+                return 1;
+            }
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF);  // Clear input buffer
+            if (!(tmp > 0))
+            {
+                continue;
+            }
         }
         while ((checkInput(strlow(input)) - 1)  < 0);
 
-        int gameNum;
-        char rungame[strlen(input)];
+        int gameNum = -1;
+        char rungame[strlen(input) + 1];
+        memset(rungame, 0, sizeof(rungame));
+        for (int i = 0; i < strlen(input); i++)
+        {
+            rungame[i] = 0;
+        }
         
         gameNum = checkInput(input) - 1;
         strcpy(rungame, games[0][gameNum]);
 
 
-        char command[50] = "./build/";
-        strcat(command, strlow(rungame));
+        char *path = malloc(1024);
 
-        /* printf("%s\n", command);
-        while (getchar() != '\n');
+        if (strlen(argv[0]) > 3)
+        {
+            strcat(path, argv[0]);
+            
+            // Find the last occurrence of '/' in the program path
+            char *last_slash = strrchr(path, '/');
+            if (last_slash == NULL)
+            {
+                perror("Error finding path");
+                return 1;
+            }
+
+            sprintf(last_slash + 1, "%s", "\0");
+        }
+        else
+        {
+            sprintf(path, "/usr/local/bin/");
+        }
+
+        char *command = malloc(strlen(path) + strlen(rungame) + 1);
+        sprintf(command, "%s%s", path, rungame);
+
+        /* printf("Game is:\n%s\n", rungame);
+        printf("Launch cmd is:\n%s\n", command);
         while (getchar() != '\n'); */
 
-        system(command);
+        int tmp = system(command);
+        if (tmp == -1)
+        {
+            return 1;
+        }
 
         clear();
 
         printf(red"Welcome back\n"off);
+
+        free(command);
+        free(path);
 
     }
 
