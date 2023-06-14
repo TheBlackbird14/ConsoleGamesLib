@@ -1,6 +1,6 @@
 # ConsoleGamesLib
 
-A collection of minimalist games, singleplayer and multiplayer, to be played in the Console.
+A collection of minimalist games, singleplayer and multiplayer, to be played in the Console. (Currently only works on macOS/Linux)
 
 ---
 
@@ -57,7 +57,7 @@ make
 
 ```bash
 
-./build/cgl
+build/cgl
 
 ```
 

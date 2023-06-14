@@ -13,22 +13,22 @@ add_executable(battleships games/battleships.c)
 
 # Add the libraries
 add_library(strcap STATIC libs/strcap.c)
-add_library(cs50 STATIC libs/cs50.c)
 
 # Link the libraries to the executables
-target_link_libraries(cgl strcap cs50)
-target_link_libraries(tictactoe strcap cs50)
-target_link_libraries(battleships strcap cs50)
+target_link_libraries(cgl strcap)
+target_link_libraries(tictactoe strcap)
+target_link_libraries(battleships strcap)
 
 # Set the output directory for the executables
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/build)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/build)
 
+
 # Install the cgl executable to /usr/local/bin
-install(TARGETS cgl DESTINATION /usr/local/bin)
+install(TARGETS cgl tictactoe battleships DESTINATION /usr/local/bin)
 
-#mute warnings for tictactoe
 
-target_compile_options(tictactoe PRIVATE "-w")
+#target_compile_options(tictactoe PRIVATE "-w")
+target_compile_options(tictactoe PRIVATE "-g")
 
 set(CMAKE_BUILD_TYPE Release)
