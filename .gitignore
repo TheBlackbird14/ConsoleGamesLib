@@ -17,3 +17,6 @@ Makefile
 .DS_Store
 .dSYM
 *.dSYM/*
+
+#vscode
+*/settings.json
