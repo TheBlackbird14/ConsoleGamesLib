@@ -8,10 +8,9 @@
 
 #include "./libs/strcap.h"
 #include "./libs/colors.h"
+#include "./libs/CGLgeneral.h"
 
 int checkInput(char *input);
-void quit(void);
-void clear(void);
 void instructions();
 void help(void);
 void list(void);
@@ -150,17 +149,6 @@ int checkInput(char *input)
     {
         return 0;
     }
-}
-
-void quit(void)
-{
-    printf("Until next Time!\n");
-    exit(0);
-}
-
-void clear(void)
-{
-    printf("\e[1;1H\e[2J");
 }
 
 void instructions(void)

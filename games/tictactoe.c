@@ -8,12 +8,12 @@
 
 #include "../libs/strcap.h"
 #include "../libs/colors.h"
+#include "../libs/CGLgeneral.h"
 
 
 void initialize(void);
 void print(void);
 void instructions(void);
-void clear(void);
 void setTile(char filler, char row, char column);
 int checkInput(char *input);
 bool hasWon(char user);
@@ -224,12 +224,6 @@ void instructions(void)
 	clear();
 }
 
-void clear(void)
-{
-	printf("\e[1;1H\e[2J");
-}
-
-
 void setTile(char filler, char row, char column)
 {
 	int arow;
@@ -273,10 +267,7 @@ int checkInput(char *input)
 	
 	if (strcmp(input, "QUIT") == 0)
 	{
-		valid = true;
-		clear();
-		printf(off);
-		exit(2);
+		quit();
 	}
 
 	if (strcmp(input, "HELP") == 0)

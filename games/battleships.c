@@ -7,6 +7,7 @@
 
 #include "../libs/strcap.h"
 #include "../libs/colors.h"
+#include "../libs/CGLgeneral.h"
 
 #define hitship "\033[31;47m"
 #define missed "\033[37;44m"
@@ -26,11 +27,6 @@ typedef struct
     int hits;
     int misses;
 } player;
-
-//functions to be included with cglGeneral.h
-void clear(void);
-void waitfor(char input);
-void quit(void);
 
 void initialize(void);
 void instructions(void);
@@ -874,18 +870,6 @@ int checkWinner(player *p)
     }
 }
 
-//clear the screen
-void clear(void)
-{
-    printf("\e[1;1H\e[2J");
-}
-
-//wait for an input (eg '\n')
-void waitfor(char input)
-{
-    while (getchar() != input);
-}
-
 //print the instructions
 void instructions(void)
 {
@@ -898,12 +882,4 @@ void instructions(void)
     printf("Press %sENTER%s to start", bRed, off);
     
     waitfor('\n');
-}
-
-//quit the program
-void quit(void)
-{
-    clear();
-    printf("Until Next Time!\n");
-    exit(2);
 }

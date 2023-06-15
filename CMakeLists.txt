@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16.3)
+cmake_minimum_required(VERSION 3.21.1)
 project(cgl)
 
 # Set the C standard to C11
@@ -13,11 +13,12 @@ add_executable(battleships games/battleships.c)
 
 # Add the libraries
 add_library(strcap STATIC libs/strcap.c)
+add_library(CGLgeneral STATIC libs/CGLgeneral.c)
 
 # Link the libraries to the executables
-target_link_libraries(cgl strcap)
-target_link_libraries(tictactoe strcap)
-target_link_libraries(battleships strcap)
+target_link_libraries(cgl strcap CGLgeneral)
+target_link_libraries(tictactoe strcap CGLgeneral)
+target_link_libraries(battleships strcap CGLgeneral)
 
 # Set the output directory for the executables
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/build)
