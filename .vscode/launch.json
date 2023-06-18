@@ -29,6 +29,17 @@
             "program": "${workspaceFolder}/build/tictactoe",
             "cwd": "${workspaceFolder}",
             "postDebugTask": "Delete dSYM"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug hangman",
+            "program": "${workspaceFolder}/games/hangman",
+            "cwd": "${workspaceFolder}",
+            "postDebugTask": "Delete dSYM",
+            "env": {
+                "TERM": "xterm"
+            }
         }
     ]
 }

@@ -20,7 +20,7 @@ bool hasWon(char user);
 int won(void);
 int tie(void);
 void help(void);
-void clearBoard(void);
+void pclearBoard(void);
 
 char board[3][3];
 
@@ -36,7 +36,7 @@ char *fields[2][9] = {{"TL","TC","TR","ML","MC","MR","BL","BC","BR"}, {"0", "0",
 int main(void)
 {
 	reset = false;
-	clear();
+	pclear();
 	initialize();
 	instructions();
 
@@ -64,7 +64,7 @@ int main(void)
 				printf(green"X" off " Turn> "purple);
 				scanf("%4s", input);
 				printf(off);
-				while ((c = getchar()) != '\n' && c != EOF);  // clear input buffer
+				while ((c = getchar()) != '\n' && c != EOF);  // pclear input buffer
 
 				//printf("%s\n", strup(input));
 				//while (getchar() != '\n');
@@ -74,7 +74,7 @@ int main(void)
 
 			if (reset == true)
 			{
-				clearBoard();
+				pclearBoard();
 				continue;
 			}
 
@@ -93,13 +93,13 @@ int main(void)
 				printf(green"O" off " Turn> "purple);
 				scanf("%4s", input);
 				printf(off);
-				while ((c = getchar()) != '\n' && c != EOF);  // clear input buffer
+				while ((c = getchar()) != '\n' && c != EOF);  // pclear input buffer
 			} 
 			while(checkInput(strup(input)) != 0);
 
 			if (reset == true)
 			{
-				clearBoard();
+				pclearBoard();
 				continue;
 			}
 
@@ -122,7 +122,7 @@ int main(void)
 
 			if (toupper(repeat) == 'Y')
 			{
-				clearBoard();
+				pclearBoard();
 				continue;
 			}
 			else
@@ -139,7 +139,7 @@ int main(void)
 
 			if (won() == 0)
 			{
-				clearBoard();
+				pclearBoard();
 				continue;
 			}
 			else
@@ -156,7 +156,7 @@ int main(void)
 
 			if (won() == 0)
 			{
-				clearBoard();
+				pclearBoard();
 				continue;
 			}
 			else
@@ -164,9 +164,9 @@ int main(void)
 				break;
 			}
 		}
-		clear();
+		pclear();
 	}
-	clear();
+	pclear();
 	printf(uBlack "Until Next Time!\n"off);
 }
 
@@ -221,7 +221,7 @@ void instructions(void)
 	printf(green "X " off "starts. Have fun!\n\n");
 	printf("Press" bRed " ENTER " off "to start");
 	while( getchar() != '\n' );
-	clear();
+	pclear();
 }
 
 void setTile(char filler, char row, char column)
@@ -352,7 +352,7 @@ bool hasWon(char user)
 
 int won(void)
 {
-	clear();
+	pclear();
 	print();
 	printf("\n");
 	printf(green"%c " off "has won!" off"\n", winner);
@@ -420,12 +420,12 @@ void help(void)
 }
 
 
-void clearBoard(void)
+void pclearBoard(void)
 {
 	winner = '\0';
 	done = false;
 	reset = false;
 	turns = 0;
 	initialize();
-	clear();
+	pclear();
 }

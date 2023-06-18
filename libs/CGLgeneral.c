@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 //clear the screen
-void clear(void)
+void pclear(void)
 {
     printf("\e[1;1H\e[2J");
 }
@@ -20,7 +20,7 @@ void waitfor(char input)
 void quit(void)
 {
     printf(off);
-    clear();
+    pclear();
     printf("Until Next Time!\n");
     exit(2);
 }

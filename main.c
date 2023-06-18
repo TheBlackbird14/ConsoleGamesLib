@@ -17,13 +17,13 @@ void list(void);
 
 
 
-#define totalGames 2
+#define totalGames 3
 
-char *games[2][totalGames] = {{"tictactoe", "battleships"}, {"1", "2"}};
+char *games[2][totalGames] = {{"tictactoe", "battleships", "hangman"}, {"1", "2", "3"}};
 
 int main(int argc, char *argv[])
 {
-    clear();
+    pclear();
 
     instructions();
 
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
                 return 1;
             }
             int c;
-            while ((c = getchar()) != '\n' && c != EOF);  // Clear input buffer
+            while ((c = getchar()) != '\n' && c != EOF);  // Pclear input buffer
             if (!(tmp > 0))
             {
                 continue;
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
             return 1;
         }
 
-        clear();
+        pclear();
 
         printf(red"Welcome back\n"off);
 

@@ -106,7 +106,7 @@ int main(void)
         initialize();
     #endif
 
-    clear();
+    pclear();
     instructions();
 
     bool done = false;
@@ -115,7 +115,7 @@ int main(void)
     {
         if (turns == 0)
         {
-            clear();
+            pclear();
             printf("ENTER to start as player 1");
 
             #if !SET_SEA_MANUAL
@@ -127,7 +127,7 @@ int main(void)
             waitfor('\n');
         }
 
-        clear();
+        pclear();
 
         int r1 = turn(&p1);
 
@@ -164,7 +164,7 @@ int main(void)
         }
     }
 
-    clear();
+    pclear();
     printf("Until Next Time!\n");
 
     return 0;
@@ -187,7 +187,7 @@ int turn(player *p)
         enemy = &p1;
     }
 
-    clear();
+    pclear();
     if (turns > 0)
     {
         printf("ENTER to continue as player %d", p->id);
@@ -208,7 +208,7 @@ int turn(player *p)
 
         do
         {
-            clear();
+            pclear();
             print(p->id, 1);
             printf("Player %d> ", p->id);
             scanf("%2s", input);
@@ -226,7 +226,7 @@ int turn(player *p)
                     printf("return value of shoot = %d\n", returnValue);
                 #endif
                 
-                clear();
+                pclear();
                 print(p->id, 1);
                 waitfor('\n');
 
@@ -465,13 +465,13 @@ void print(int id, int mode)
 
 void place(void)
 {
-    clear();
+    pclear();
     printf("ENTER to Place Ships for Player 1");
     waitfor('\n');
 
     for (int i = 0; i < MAX_SHIPS; i++)
     {
-        clear();
+        pclear();
         print(p1.id, 0);
 
         char input[3];
@@ -481,7 +481,7 @@ void place(void)
         {
             printf("Place Ship %d with length %d> ", i + 1, shipsLengths[i]);
             scanf("%2s", input);
-            while ((c = getchar()) != '\n' && c != EOF);  // clear input buffer
+            while ((c = getchar()) != '\n' && c != EOF);  // pclear input buffer
 
             if (checkInput(input) != 0)
             {
@@ -503,7 +503,7 @@ void place(void)
             printf("Direction (u, d, l, r)> ");
             scanf("%c", &dir);
 
-            while ((c = getchar()) != '\n' && c != EOF);  // clear input buffer
+            while ((c = getchar()) != '\n' && c != EOF);  // pclear input buffer
 
             if (toupper(dir) == 'Q')
             {
@@ -544,17 +544,17 @@ void place(void)
 
     }
 
-    clear();
+    pclear();
     print(p1.id, 0);
     printf("ENTER to end turn");
     waitfor('\n');
-    clear();
+    pclear();
     printf("ENTER to Place Ships for Player 2");
     waitfor('\n');
 
     for (int i = 0; i < MAX_SHIPS; i++)
     {
-        clear();
+        pclear();
         print(p2.id, 0);
 
         char input[3];
@@ -564,7 +564,7 @@ void place(void)
         {
             printf("Place Ship %d with length %d> ", i + 1, shipsLengths[i]);
             scanf("%2s", input);
-            while ((c = getchar()) != '\n' && c != EOF);  // clear input buffer
+            while ((c = getchar()) != '\n' && c != EOF);  // pclear input buffer
 
             if (checkInput(input) != 0)
             {
@@ -586,7 +586,7 @@ void place(void)
             printf("Direction (u, d, l, r)> ");
             scanf("%c", &dir);
 
-            while ((c = getchar()) != '\n' && c != EOF);  // clear input buffer
+            while ((c = getchar()) != '\n' && c != EOF);  // pclear input buffer
 
             if (toupper(dir) == 'Q')
             {
@@ -632,7 +632,7 @@ void place(void)
 
     }
 
-    clear();
+    pclear();
     print(p2.id, 0);
     printf("ENTER to end turn and start game");
 }
@@ -803,7 +803,7 @@ int shoot(player *p, int row, int col)
 //return 0 = quit, 1 continue
 int won(player *p)
 {
-    clear();
+    pclear();
     printf("%sPlayer %d has Won!%s\n", win, p->id, off);
     print(p->id, 2);
 

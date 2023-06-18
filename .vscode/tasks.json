@@ -4,7 +4,8 @@
         {
             "label": "Delete dSYM",
             "type": "shell",
-            "command": "rm -rf ${workspaceFolder}/**/**/*.dSYM"
+            "command": "rm -rf ${workspaceFolder}/**/**/*.dSYM",
+            "problemMatcher": []
         },
         {
             "label": "compile bships",
